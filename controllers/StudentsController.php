@@ -28,6 +28,22 @@ class StudentsController extends BaseController
         $this->planillas_presentes = new PlanillaPresenteModel();
     }
 
+        function checkExistStudent(){
+
+        $dni = $_GET['dni'];
+        $student = $this->model->findByDni($dni);
+
+        $res = "false";
+
+        if($student){
+            $res = "true";
+        }
+
+        $r = array('val' => $res);
+
+        $this->returnSuccess(200, $r);
+    }
+
 
     //SI CREO UN ALUMNO ME FIJO SI EXISTIA, EN CASO DE QUE SI , LO UPDATEO
     function post()
@@ -169,6 +185,13 @@ class StudentsController extends BaseController
 
         if(isset($_GET['subcategoria']) && $_GET['subcategoria'] != "Todo") {
             $localFilter[] = 'subcategoria = "' . $_GET['subcategoria'] . '"';
+        }
+
+        if(isset($_GET['date']) && $_GET['date'] != "") {
+            $date = explode("-", $_GET['date']);
+            $year = $date[0];
+
+            $localFilter[] = 'anio = "' . $year . '"';
         }
 
         return $localFilter;

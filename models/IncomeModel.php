@@ -54,7 +54,7 @@ class IncomeModel extends BaseModel
          * where ir.rent_id=r.id and r.student_id=s.id and i.id=ir.income_id and i.created > "2019-12-06" ) order by created asc
          */
 
-        $query= 'SELECT cc.category as category, i.id as income_id, i.amount as amount, i.payment_method as payment_method ,i.created as income_created, concat(s.nombre," ",s.apellido) as description FROM `incomes_class_courses` icc,class_courses cc, students s, incomes i
+        $query= 'SELECT icc.detail as detail, cc.category as category, i.id as income_id, i.amount as amount, i.payment_method as payment_method ,i.created as income_created, concat(s.nombre," ",s.apellido) as description FROM `incomes_class_courses` icc,class_courses cc, students s, incomes i
           where icc.class_course_id= cc.id and cc.student_id=s.id and i.id=icc.income_id order by i.created desc LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
 
         return $this->getDb()->fetch_all($query);

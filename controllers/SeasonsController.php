@@ -28,6 +28,12 @@ class SeasonsController extends BaseController
     }
 
 
+    function getResumInfoByStudent(){
+        $student_id = $_GET['student_id'];
+
+        $this->returnSuccess(200, $this->getPresentsBySeason($student_id));
+    }
+
     //me dice la cantidad de clases tomadas y compradas por temporada
 
     function getPresentsBySeason($student_id){
@@ -63,7 +69,7 @@ class SeasonsController extends BaseController
 
             $tot_paid_amount = $this->incomes_class_course->getPaidAmountByClassCourseIncomesBySeason($filters3);
 
-            $tot_amount = $this->incomes_class_course->getAmountByClassCourseIncomesBySeason($filters3);
+            $tot_amount = $this->incomes_class_course->getAmountByClassCourseIncomesBySeason($filters2);
 
 
             $reportPresentsBySeason[] = array('name' => $seasons[$k]['name'], 'cant_presents' => $cant_presentes, 'cant_buyed_classes' => $cant_buyed_classes, 'tot_paid_amount' => $tot_paid_amount,

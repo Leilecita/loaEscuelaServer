@@ -45,14 +45,14 @@ class IncomesClassCoursesController extends BaseController
         $data = (array) json_decode(file_get_contents("php://input"));
 
         $newIncome= array('amount' => $data['amount'],'payment_method' => "efectivo");
-        $res=$this->incomes->save($newIncome);
+        $res = $this->incomes->save($newIncome);
 
         if($res<0){
             $this->returnError(404,null);
         }else{
             $insertedIncome = $this->incomes->findById($res);
 
-            $incomeClassCourse=array('income_id' => $insertedIncome['id'], 'class_course_id' => $data['class_course_id']);
+            $incomeClassCourse = array('income_id' => $insertedIncome['id'], 'class_course_id' => $data['class_course_id'], 'detail' => $data['detail']);
             $resIncomeClassCourse= $this->model->save($incomeClassCourse);
 
             if($resIncomeClassCourse<0){
