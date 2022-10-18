@@ -235,6 +235,61 @@ class StudentsController extends BaseController
     }
 
 
+
+    function loadColorStudent(){
+
+        $students = $this->model->findAll();
+
+        for ($j = 0; $j < count($students); ++$j) {
+
+            $colors=$this->colors();
+
+            $this->model->update($students[$j]['id'],array('color' => $colors[ rand(0,23)]));
+        }
+    }
+
+
+    function colors(){
+
+        $color=array();
+        $color[]=array('#E57373');
+        $color[]=array('#4DD0E1');
+
+        $color[]=array('#64B5F6');
+        $color[]=array('#80CBC4');
+        $color[]=array('#80DEEA');
+
+        $color[]=array('#D4E157');
+        $color[]=array('#FF8A65');
+        $color[]=array('#E57373');
+        $color[]=array('#FFB74D');
+        $color[]=array('#F06292');
+        $color[]=array('#4FC3F7');
+        $color[]=array('#9575CD');
+
+        $color[]=array('#90A4AE');
+        $color[]=array('#FFD54F');
+        $color[]=array('#F9A825');
+        $color[]=array('#CE93D8');
+        $color[]=array('#FF8A65');
+        $color[]=array('#90CAF9');
+        $color[]=array('#4DB6AC');
+
+        $color[]=array('#64B5F6');
+        $color[]=array('#81C784');
+        $color[]=array('#FF8A65');
+        $color[]=array('#9FA8DA');
+        $color[]=array('#B39DDB');
+        $color[]=array('#4FC3F7');
+        $color[]=array('#4DB6AC');
+        $color[]=array('#BA68C8');
+        $color[]=array('#EF9A9A');
+
+        return $color;
+    }
+
+
+
 }
 
 /* function getStudentsByAssistsGeneral($localFilter, $filtersAssists){
