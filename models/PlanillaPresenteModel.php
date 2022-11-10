@@ -34,6 +34,12 @@ class PlanillaPresenteModel extends BaseModel
         return $this->getDb()->fetch_all($query);
     }
 
+    function getPresentsGroupByDateSinPag($filters=array()){
+        $conditions = join(' AND ',$filters);
+        $query = 'SELECT * FROM planillas_presentes '.( empty($filters) ?  '' : ' WHERE '.$conditions ).' group by DAY(fecha_presente), MONTH(fecha_presente), YEAR (fecha_presente) ORDER BY fecha_presente DESC';
+        return $this->getDb()->fetch_all($query);
+    }
+
     function countPresentes($filters=array()){
         $conditions = join(' AND ',$filters);
         $query = 'SELECT COUNT(pp.id) as total FROM planillas_presentes pp JOIN planillas p ON pp.planilla_id = p.id '.( empty($filters) ?  '' : ' WHERE '.$conditions );

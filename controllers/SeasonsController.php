@@ -38,8 +38,8 @@ class SeasonsController extends BaseController
 
     function getPresentsBySeason($student_id){
 
-        $seasons = $this->model->findAll($this->getFilters(), $this->getPaginator());
-
+        $seasons = $this->model->findAllAll($this->getFilters());  // Aca a futuro nos podemos quedar solo con la ultima temporada TODO
+                                                                    // porque es solo para la visual del alumno
         $reportPresentsBySeason = array();
 
         for ($k = 0; $k < count($seasons); ++$k) {

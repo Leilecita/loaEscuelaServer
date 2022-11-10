@@ -75,7 +75,7 @@ class PlanillasPresentesController extends BaseController
 
     function getDayResumPresents(){
 
-        $presents = $this->model->getPresentsGroupByDate($this->getFilters(), $this->getPaginator());
+        $presents = $this->model->getPresentsGroupByDateSinPag($this->getFilters());
         $reportItems = array();
 
         for ($l = 0; $l < count($presents); ++$l) {
