@@ -15,6 +15,18 @@ class BeachBoxesController  extends BaseController
         $this->model = new BeachBoxModel();
     }
 
+
+    function getBoxes(){
+
+        $filters = $this->getFilters();
+        if(isset($_GET['payment_place'])){
+            $filters[] = 'payment_place = "'.$_GET['payment_place'].'"';
+        }
+
+        $this->returnSuccess(200,$this->model->findAll($filters,$this->getPaginator()));
+
+    }
+
     function getLastBox(){
 
         $totalAmount=array('total' => 0.0);
@@ -22,7 +34,13 @@ class BeachBoxesController  extends BaseController
            // $totalAmount = $this->extractions->amountByExtractionsDay($_GET['date'],$_GET['dateTo']);
         }
 
-        $boxes = $this->model->findAllBoxes($this->getFilters());
+
+        $filters = $this->getFilters();
+        if(isset($_GET['payment_place'])){
+            $filters[] = 'payment_place = "'.$_GET['payment_place'].'"';
+        }
+
+        $boxes = $this->model->findAllBoxes($filters);
 
         $lastBox = array('rest_box' => 0);
         if($boxes){
@@ -50,12 +68,18 @@ class BeachBoxesController  extends BaseController
 
         $dates = $this->getDates($_GET['date']);
 
+        $payment_place = $_GET['payment_place'];
+
+        error_log($payment_place);
+
         $filters3 = parent::getFilters();
 
         $filters3[] = 'ic.created >= "'.$dates['date'].'"';
         $filters3[] = 'ic.created < "'.$dates['dateTo'].'"';
 
         $filters3[] = 'c.category = "' . "escuela" . '"';
+        $filters3[] = 'i.payment_place = "'.$payment_place.'"';
+
 
 
         $tot_paid_amount_esc = $this->model->getPaidAmountByClassCourseByDay($filters3);
@@ -66,6 +90,7 @@ class BeachBoxesController  extends BaseController
         $filters4[] = 'ic.created < "'.$dates['dateTo'].'"';
 
         $filters4[] = 'c.category = "' . "highschool" . '"';
+        $filters4[] = 'i.payment_place = "'.$payment_place.'"';
 
         $tot_paid_amount_high = $this->model->getPaidAmountByClassCourseByDay($filters4);
 
@@ -75,8 +100,9 @@ class BeachBoxesController  extends BaseController
         $filters5[] = 'ic.created < "'.$dates['dateTo'].'"';
 
         $filters5[] = 'c.category = "' . "colonia" . '"';
+        $filters5[] = 'i.payment_place = "'.$payment_place.'"';
 
-        $tot_paid_amount_col = $this->model->getPaidAmountByClassCourseByDay($filters4);
+        $tot_paid_amount_col = $this->model->getPaidAmountByClassCourseByDay($filters5);
 
         $reportBox = array('tot_esc_ef' => $tot_paid_amount_esc, 'tot_col_ef' => $tot_paid_amount_col, 'tot_high_ef' => $tot_paid_amount_high);
 

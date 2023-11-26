@@ -44,7 +44,7 @@ class IncomesClassCoursesController extends BaseController
     {
         $data = (array) json_decode(file_get_contents("php://input"));
 
-        $newIncome= array('amount' => $data['amount'],'payment_method' => "efectivo");
+        $newIncome= array('amount' => $data['amount'],'payment_method' => "efectivo", 'payment_place' => $data['payment_place']);
         $res = $this->incomes->save($newIncome);
 
         if($res<0){
@@ -83,4 +83,35 @@ class IncomesClassCoursesController extends BaseController
         $res=$this->events->save($event);
 
     }*/
+
+    function generatePdf(){
+
+        if(isset($_GET['order_id'])){
+
+            $orderId = $_GET['order_id'];
+            $order=$this->model->findById($orderId);
+
+            $user=$this->clients->findById($order['client_id']);
+
+            $data = array(
+                'items' => array( array('name' => 'Langostinos', "qty" => 1, "price"=>"160"), array('name' => 'Merluza', "qty" => 2, "price"=>"140"))
+            );
+            // echo render($data);
+
+            // $filename="Order-".$orderId."pdf";
+            $filename="Order-".$user['name']."pdf";
+
+            // $this->generate_pdf(render($data),$filename);
+
+            $parts = explode(" ", $this->getDate($order['delivery_date']));
+            $date=$parts[0];
+
+            $this->generate_pdf(render($this->getItems($orderId),$user,$date),$filename);
+
+
+        }else{
+            $this->returnError(400,"No se valida order_id");
+        }
+
+    }
 }

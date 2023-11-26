@@ -41,14 +41,24 @@ class PlanillasPresentesController extends BaseController
         return $parts[0];
     }
 
+    function getSeason($month,$year){
+        if($month > 8){
+            $year1 = $year;
+            $year2 = $year + 1;
+        }else{
+            $year1 = $year - 1;
+            $year2 = $year;
+        }
+        return $year1."-".$year2;
+    }
 
-    function getPlanillasByYear($year){
+    function getPlanillasByYear($datePresent){
 
-       // $pl = $this->planillas->findAll('anio = "'.$year.'"', $this->getPaginator());
-        $pl = $this->planillas->findAll(array('anio = "'.$year.'"'), $this->getPaginator());
+        $date = explode("-", $datePresent);
+
+        $pl = $this->planillas->findAll(array('anio = "'.$this->getSeason($date[1],$date[0]).'"'), $this->getPaginator());
 
         return $pl;
-
     }
 
 
@@ -57,7 +67,6 @@ class PlanillasPresentesController extends BaseController
 
        // $presentes = $this->model->findAll(array('alumno_id = "' . $_GET['id'] . '"'), $this->getPaginator());
         $presentes = $this->model->findAllPresentsByStudent(array('alumno_id = "' . $_GET['id'] . '"'), $this->getPaginator());
-
         $report = array();
 
         for ($l = 0; $l < count($presentes); ++$l) {
@@ -65,9 +74,7 @@ class PlanillasPresentesController extends BaseController
             $planilla = $this->planillas->findById($presentes[$l]['planilla_id']);
 
             $report[] = array('planilla' => $planilla['subcategoria'], 'fecha_presente' => $presentes[$l]['fecha_presente']);
-
         }
-
 
         $this->returnSuccess(200,$report);
     }
@@ -80,7 +87,8 @@ class PlanillasPresentesController extends BaseController
 
         for ($l = 0; $l < count($presents); ++$l) {
 
-            $list_planillas_by_year = $this->getPlanillasByYear($this->getYearFromPresentDate($presents[$l]['fecha_presente']));
+           // $list_planillas_by_year = $this->getPlanillasByYear($this->getYearFromPresentDate($presents[$l]['fecha_presente']));
+            $list_planillas_by_year = $this->getPlanillasByYear($presents[$l]['fecha_presente']);
 
             $dates = $this->getDates($presents[$l]['fecha_presente']);
 
@@ -112,9 +120,7 @@ class PlanillasPresentesController extends BaseController
                 'tot_incomes_escuela' => $sum_tot_escuela, 'tot_incomes_colonia' => $sum_tot_colonia, 'tot_incomes_highschool' => $sum_tot_highschool);
 
         }
-
         $this->returnSuccess(200, $reportItems);
-
     }
 
 }

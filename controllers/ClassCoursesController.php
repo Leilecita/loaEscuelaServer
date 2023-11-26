@@ -57,6 +57,9 @@ class ClassCoursesController  extends BaseController
         $payment_method = $data['payment_method'];
         unset($data['payment_method']);
 
+        $payment_place = $data['payment_place'];
+        unset($data['payment_place']);
+
         if(empty($data['paid_amount'])) {
             unset($data['paid_amount']);
         }else{
@@ -72,23 +75,23 @@ class ClassCoursesController  extends BaseController
             $inserted = $this->model->findById($res);
 
 
-            $this->checkAndCreateIncome($amount_income, $inserted['id'], $payment_method);
+            $this->checkAndCreateIncome($amount_income, $inserted['id'], $payment_method, $payment_place, $inserted['observation']);
 
             $this->returnSuccess(201,$inserted);
 
         }
     }
 
-    function checkAndCreateIncome($amount_income,$class_course_id,$payment_method){
+    function checkAndCreateIncome($amount_income,$class_course_id,$payment_method, $payment_place, $observation){
 
 
         if($amount_income != 0){
 
             // es nuevo para poder cmbiar de fecha
-            $course= $this->model->findById($class_course_id);
+            $course = $this->model->findById($class_course_id);
 
            // $res = $this->createIncome($amount_income,$class_course_id,$payment_method,$this->getTimeMoreSeconds($course['created']));
-            $res = $this->createIncome($amount_income, $class_course_id, $payment_method, $course['created']);
+            $res = $this->createIncome($amount_income, $class_course_id, $payment_method, $course['created'], $payment_place, $observation);
 
             //$this->createIncomeEvent($class_course_id,$amount_income,$res);
         }
@@ -99,14 +102,14 @@ class ClassCoursesController  extends BaseController
        // $this->createIncome(0,$class_course_id,"nuevo",$course['created']);
     }
 
-    function createIncome($amount_income,$class_course_id,$payment_method,$created){
+    function createIncome($amount_income,$class_course_id,$payment_method, $created, $payment_place, $observation){
 
-        $newIncome = array('amount' => $amount_income,'payment_method' => $payment_method,'created' => $created);
+        $newIncome = array('amount' => $amount_income,'payment_method' => $payment_method,'payment_place' => $payment_place,'created' => $created);
         $res = $this->incomes->save($newIncome);
 
         $insertedIncome = $this->incomes->findById($res);
 
-        $incomeClassCourse = array('income_id' => $insertedIncome['id'], 'class_course_id' => $class_course_id,'created' => $created);
+        $incomeClassCourse = array('income_id' => $insertedIncome['id'], 'class_course_id' => $class_course_id, 'detail' => $observation, 'created' => $created);
 
         $this->incomesClassCourse->save($incomeClassCourse);
 
@@ -122,7 +125,7 @@ class ClassCoursesController  extends BaseController
         $reportCourse=array();
         for ($j = 0; $j < count($list_all); ++$j) {
 
-            $course= $this->model->findById($list_all[$j]['id']);
+            $course = $this->model->findById($list_all[$j]['id']);
 
             $paidAmountByCourse= $this->incomesClassCourse->getPaidAmountByClassCourseIncomes(array( 'class_course_id = "'.$list_all[$j]['id'].'"'));
 
@@ -136,6 +139,5 @@ class ClassCoursesController  extends BaseController
 
         $this->returnSuccess(200,$reportCourse);
     }
-
 
 }

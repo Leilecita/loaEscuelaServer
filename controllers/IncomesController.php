@@ -20,7 +20,18 @@ class IncomesController extends BaseController
 
     function getAllIncomes(){
 
-        $report = $this->model->getAllIncomes($this->getPaginator());
+        $filters = $this->getFilters();
+
+         $filters[] = 'icc.class_course_id = cc.id';
+         $filters[] = 'cc.student_id = s.id';
+         $filters[] = 'i.id=icc.income_id';
+
+
+        if(isset($_GET['payment_place'])){
+            $filters[] = 'i.payment_place = "'.$_GET['payment_place'].'"';
+        }
+
+        $report = $this->model->getAllIncomes($this->getPaginator(),$filters);
 
 
         $this->returnSuccess(200,$report);

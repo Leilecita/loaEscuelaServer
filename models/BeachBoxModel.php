@@ -18,7 +18,7 @@ class BeachBoxModel extends BaseModel
     function getPaidAmountByClassCourseByDay($filters){
 
         $conditions = join(' AND ',$filters);
-        $query = 'SELECT SUM(i.amount) as total FROM incomes i JOIN incomes_class_courses ic  ON ic.income_id = i.id LEFT JOIN class_courses c ON c.id = ic.class_course_id '.( empty($filters) ?  '' : ' WHERE '.$conditions );
+        $query = 'SELECT SUM(i.amount) as total FROM incomes i JOIN incomes_class_courses ic  ON ic.income_id = i.id JOIN class_courses c ON c.id = ic.class_course_id '.( empty($filters) ?  '' : ' WHERE '.$conditions );
         $response= $this->getDb()->fetch_row($query);
         if($response['total']!=null){
             return $response['total'];
