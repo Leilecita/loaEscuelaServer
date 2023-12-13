@@ -15,6 +15,18 @@ class OutcomeModel extends BaseModel
         $this->tableName = 'outcomes';
     }
 
+    function sumAmountOutcomes($filters){
+
+        $conditions = join(' AND ',$filters);
+        $query = 'SELECT SUM(amount) as total FROM outcomes '.( empty($filters) ?  '' : ' WHERE '.$conditions );
+        $response= $this->getDb()->fetch_row($query);
+        if($response['total']!=null){
+            return $response['total'];
+        }else{
+            $response['total']=0;
+            return $response['total'];
+        }
+    }
 
 
     function getOutcomes($filters=array(),$paginator=array()){

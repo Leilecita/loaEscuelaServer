@@ -112,6 +112,8 @@ class StudentsController extends BaseController
 
         // trae la ultima creada, si hay mas, ver eso, habria que enviar, anio y mes
 
+        //hacer lo de las season
+
         $planilla = $this->planillas->getPlanillaByCategoriaAndSubCat($localFilter);
 
         $reportStudent = array();
@@ -146,11 +148,20 @@ class StudentsController extends BaseController
                 if($onlyPresents == "false"){
 
                     $reportStudent[] = array('student_id' => $students[$k]['student_id'] , 'dni' => $students[$k]['dni'], 'nombre' => $students[$k]['nombre'], 'apellido' => $students[$k]['apellido'], 'presente' => $presente,
-                        'planilla_id' => $planilla['id'], 'planilla_presente_id' => $planilla_presente_id, 'taken_classes' => $report_takenandpaid_classes, 'color' => $students[$k]['color']);
+                        'planilla_id' => $planilla['id'], 'planilla_presente_id' => $planilla_presente_id, 'taken_classes' => $report_takenandpaid_classes, 'color' => $students[$k]['color'],
+                        'nombre_mama' => $students[$k]['nombre_mama'],
+                        'nombre_papa' => $students[$k]['nombre_papa'],
+                        'tel_papa' => $students[$k]['tel_papa'],
+                        'tel_mama' => $students[$k]['tel_mama'],
+                        );
                 }else{
                     if(strcmp($presente, "si") == 0 ){
                         $reportStudent[] = array('student_id' => $students[$k]['student_id'] , 'dni' => $students[$k]['dni'],'nombre' => $students[$k]['nombre'], 'apellido' => $students[$k]['apellido'], 'presente' => $presente,
-                            'planilla_id' => $planilla['id'], 'planilla_presente_id' => $planilla_presente_id, 'taken_classes' => $report_takenandpaid_classes, 'color' => $students[$k]['color']);
+                            'planilla_id' => $planilla['id'], 'planilla_presente_id' => $planilla_presente_id, 'taken_classes' => $report_takenandpaid_classes, 'color' => $students[$k]['color'],
+                            'nombre_mama' => $students[$k]['nombre_mama'],
+                            'nombre_papa' => $students[$k]['nombre_papa'],
+                            'tel_papa' => $students[$k]['tel_papa'],
+                            'tel_mama' => $students[$k]['tel_mama'],);
                     }
                 }
             }

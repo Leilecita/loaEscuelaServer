@@ -10,17 +10,20 @@ require_once 'BaseController.php';
 require_once  __DIR__.'/../models/ClassCourseModel.php';
 require_once  __DIR__.'/../models/IncomeClassCourseModel.php';
 require_once  __DIR__.'/../models/IncomeModel.php';
+require_once  __DIR__.'/../models/StudentModel.php';
 
 class ClassCoursesController  extends BaseController
 {
     private $incomesClassCourse;
     private $incomes;
+    private $students;
 
     function __construct(){
         parent::__construct();
         $this->model = new ClassCourseModel();
         $this->incomesClassCourse = new IncomeClassCourseModel();
         $this->incomes = new IncomeModel();
+        $this->students = new StudentModel();
     }
 
 
@@ -74,8 +77,9 @@ class ClassCoursesController  extends BaseController
 
             $inserted = $this->model->findById($res);
 
-
             $this->checkAndCreateIncome($amount_income, $inserted['id'], $payment_method, $payment_place, $inserted['observation']);
+
+            $this->updateStudentCategory($inserted['student_id'], $inserted['category']);
 
             $this->returnSuccess(201,$inserted);
 
@@ -100,6 +104,11 @@ class ClassCoursesController  extends BaseController
         // $this->createIncome(0,$class_course_id,"nuevo",$this->getActualDateTime());
 
        // $this->createIncome(0,$class_course_id,"nuevo",$course['created']);
+    }
+
+    function updateStudentCategory($student_id, $category){
+        $this->students->update($student_id, array('category' => $category));
+
     }
 
     function createIncome($amount_income,$class_course_id,$payment_method, $created, $payment_place, $observation){
