@@ -18,7 +18,7 @@ class PlanillaModel extends BaseModel
 
     function findAllPlanillas($filters=array(),$paginator=array()){
         $conditions = join(' AND ',$filters);
-        $query = 'SELECT * FROM '.$this->tableName .( empty($filters) ?  '' : ' WHERE '.$conditions ).' ORDER BY date DESC LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
+        $query = 'SELECT * FROM '.$this->tableName .( empty($filters) ?  '' : ' WHERE '.$conditions ).' ORDER BY anio DESC LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
         return $this->getDb()->fetch_all($query);
     }
 
