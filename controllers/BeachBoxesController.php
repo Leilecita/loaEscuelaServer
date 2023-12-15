@@ -112,7 +112,7 @@ class BeachBoxesController  extends BaseController
         $tot_paid_amount_esc = $this->model->getPaidAmountByClassCourseByDay($filters3e);
 
         $filters3t = $filters3;
-        $filters3t[] = 'i.payment_method = "tarjeta"';
+        $filters3t[] = 'i.payment_method != "efectivo"';
         $tot_paid_amount_esc_tarj = $this->model->getPaidAmountByClassCourseByDay($filters3t);
 
 

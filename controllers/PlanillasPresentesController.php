@@ -82,24 +82,24 @@ class PlanillasPresentesController extends BaseController
 
     function getDayResumPresents(){
 
-        $presents = $this->model->getPresentsGroupByDateSinPag($this->getFilters());
+
+        $presents = $this->model->getPresentsGroupByDate($this->getFilters(), $this->getPaginator());
         $reportItems = array();
 
         for ($l = 0; $l < count($presents); ++$l) {
 
-           // $list_planillas_by_year = $this->getPlanillasByYear($this->getYearFromPresentDate($presents[$l]['fecha_presente']));
             $list_planillas_by_year = $this->getPlanillasByYear($presents[$l]['fecha_presente']);
 
             $dates = $this->getDates($presents[$l]['fecha_presente']);
 
-            $sum_tot_amount = $this->incomes->sumAmountIncomesByDate(array('c.created >= "' . $dates['date'] . '"', 'c.created < "' . $dates['dateTo'] . '"'));
-            $sum_tot_escuela = $this->incomes->sumAmountIncomesByDate(array('c.created >= "' . $dates['date'] . '"', 'c.created < "' . $dates['dateTo'] . '"',
+            $sum_tot_amount = $this->incomes->sumAmountIncomesByDate(array('i.created >= "' . $dates['date'] . '"', 'i.created < "' . $dates['dateTo'] . '"'));
+            $sum_tot_escuela = $this->incomes->sumAmountIncomesByDate(array('i.created >= "' . $dates['date'] . '"', 'i.created < "' . $dates['dateTo'] . '"',
                 'c.category = "Escuela"'));
 
-            $sum_tot_highschool = $this->incomes->sumAmountIncomesByDate(array('c.created >= "' . $dates['date'] . '"', 'c.created < "' . $dates['dateTo'] . '"',
+            $sum_tot_highschool = $this->incomes->sumAmountIncomesByDate(array('i.created >= "' . $dates['date'] . '"', 'i.created < "' . $dates['dateTo'] . '"',
                 'c.category = "Highschool"'));
 
-            $sum_tot_colonia = $this->incomes->sumAmountIncomesByDate(array('c.created >= "' . $dates['date'] . '"', 'c.created < "' . $dates['dateTo'] . '"',
+            $sum_tot_colonia = $this->incomes->sumAmountIncomesByDate(array('i.created >= "' . $dates['date'] . '"', 'i.created < "' . $dates['dateTo'] . '"',
                 'c.category = "Colonia"'));
 
             $reportPlanilla = array();
