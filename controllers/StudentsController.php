@@ -96,9 +96,15 @@ class StudentsController extends BaseController
     function getStudents(){
 
         if(isset($_GET['order']) && !empty($_GET['order'])){
-            $order = $_GET['order'];
+
+            if($_GET['order'] == "nombre"){
+                $order = $_GET['order']." ASC";
+            }else{
+                $order = $_GET['order']." DESC";
+            }
+
         }else{
-            $order = 'created';
+            $order = 'created DESC';
         }
 
         $this->returnSuccess(200, $this->model->findAllStudents($this->getFilters(),$this->getPaginator(), $order));

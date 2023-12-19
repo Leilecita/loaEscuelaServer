@@ -22,7 +22,7 @@ class StudentModel extends BaseModel
 
     function findAllStudents($filters=array(),$paginator=array(), $orderby){
         $conditions = join(' AND ',$filters);
-        $query = 'SELECT * FROM '.$this->tableName .( empty($filters) ?  '' : ' WHERE '.$conditions ).' ORDER BY '.$orderby.' ASC LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
+        $query = 'SELECT * FROM '.$this->tableName .( empty($filters) ?  '' : ' WHERE '.$conditions ).' ORDER BY '.$orderby.' LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
         return $this->getDb()->fetch_all($query);
     }
 
