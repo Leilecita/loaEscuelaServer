@@ -7,6 +7,7 @@
  */
 
 require_once 'BaseController.php';
+require_once 'SecureBaseController.php';
 require_once  __DIR__.'/../models/PlanillaPresenteModel.php';
 require_once  __DIR__.'/../models/PlanillaModel.php';
 require_once  __DIR__.'/../models/IncomeModel.php';

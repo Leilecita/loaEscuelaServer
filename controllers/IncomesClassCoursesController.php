@@ -6,7 +6,7 @@
  * Time: 12:23
  */
 
-require_once 'BaseController.php';
+require_once 'SecureBaseController.php';
 require_once  __DIR__.'/../models/IncomeClassCourseModel.php';
 require_once  __DIR__.'/../models/IncomeModel.php';
 require_once  __DIR__.'/../models/StudentModel.php';
