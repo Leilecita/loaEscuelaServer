@@ -36,7 +36,7 @@ class LoginController extends BaseController
         if($user){
             $token = SessionHelper::genrateSessionToken();
             $this->model->update($user['id'],array('token' => $token));
-            $result = array('token' => $token,'name' => $user['name'],'id' => $user['id']);
+            $result = array('token' => $token,'name' => $user['name'],'id' => $user['id'], 'level' => $user['level']);
             $this->returnSuccess(200,$result);
         }else{
             $this->returnError(401,'Usuario o contraseña incorrecto');
