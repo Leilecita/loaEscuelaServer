@@ -13,7 +13,7 @@ require_once  __DIR__.'/../models/StudentModel.php';
 require_once  __DIR__.'/../models/ClassCourseModel.php';
 
 
-class IncomesClassCoursesController extends BaseController
+class IncomesClassCoursesController extends SecureBaseController
 {
     private $incomes;
     private $courses;

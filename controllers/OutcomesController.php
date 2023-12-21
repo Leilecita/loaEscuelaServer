@@ -9,7 +9,7 @@
 require_once 'BaseController.php';
 require_once  __DIR__.'/../models/OutcomeModel.php';
 
-class OutcomesController extends BaseController
+class OutcomesController extends SecureBaseController
 {
 
     function __construct(){
