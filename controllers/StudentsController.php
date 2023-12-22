@@ -156,7 +156,7 @@ class StudentsController extends SecureBaseController
                 if($onlyPresents == "false"){
 
                     $reportStudent[] = array('student_id' => $students[$k]['student_id'] , 'dni' => $students[$k]['dni'], 'nombre' => $students[$k]['nombre'], 'apellido' => $students[$k]['apellido'], 'presente' => $presente,
-                        'planilla_id' => $planilla['id'], 'planilla_presente_id' => $planilla_presente_id, 'taken_classes' => $report_takenandpaid_classes, 'color' => $students[$k]['color'],
+                        'planilla_id' => $planilla['id'], 'planilla_presente_id' => $planilla_presente_id, 'taken_classes' => $report_takenandpaid_classes, 'color' => "",
                         'nombre_mama' => $students[$k]['nombre_mama'],
                         'nombre_papa' => $students[$k]['nombre_papa'],
                         'tel_papa' => $students[$k]['tel_papa'],
@@ -166,7 +166,7 @@ class StudentsController extends SecureBaseController
                 }else{
                     if(strcmp($presente, "si") == 0 ){
                         $reportStudent[] = array('student_id' => $students[$k]['student_id'] , 'dni' => $students[$k]['dni'],'nombre' => $students[$k]['nombre'], 'apellido' => $students[$k]['apellido'], 'presente' => $presente,
-                            'planilla_id' => $planilla['id'], 'planilla_presente_id' => $planilla_presente_id, 'taken_classes' => $report_takenandpaid_classes, 'color' => $students[$k]['color'],
+                            'planilla_id' => $planilla['id'], 'planilla_presente_id' => $planilla_presente_id, 'taken_classes' => $report_takenandpaid_classes, 'color' => "",
                             'nombre_mama' => $students[$k]['nombre_mama'],
                             'nombre_papa' => $students[$k]['nombre_papa'],
                             'tel_papa' => $students[$k]['tel_papa'],
