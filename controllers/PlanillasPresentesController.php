@@ -12,7 +12,7 @@ require_once  __DIR__.'/../models/PlanillaPresenteModel.php';
 require_once  __DIR__.'/../models/PlanillaModel.php';
 require_once  __DIR__.'/../models/IncomeModel.php';
 
-class PlanillasPresentesController extends BaseController
+class PlanillasPresentesController extends SecureBaseController
 {
 
     private $planillas;
