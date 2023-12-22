@@ -250,12 +250,15 @@ class StudentsController extends BaseController
 
             $planilla = $this->planillas->getPlanillaByCategoriaAndSubCat($localFilter);
             $total_alumnos = 0;
+            $total_presents = 0;
 
             if($planilla){
                 $total_alumnos = $this->model->countStudents(array('pa.planilla_id = '.$planilla['id']));
+
+                $total_presents = $this->planillas_presentes->countPresentes(array('fecha_presente = "'.$_GET['date']. '"', 'planilla_id = "'.$planilla['id']. '"' ));
             }
 
-            $total_presents = $this->planillas_presentes->countPresentes(array('fecha_presente = "'.$_GET['date']. '"', 'planilla_id = "'.$planilla['id']. '"' ));
+
 
         }  //VARIAS PLANILLAS SELECCIONADA, POR EJEMPLO ESCUELA, TODOS, tiene que si o is haber selccionado categ y sub cat
 
