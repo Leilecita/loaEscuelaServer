@@ -144,10 +144,12 @@ class StudentsController extends SecureBaseController
 
                 $presente = "no";
                 $planilla_presente_id = -1;
+                $obs = "";
 
                 if($present){
                     $presente = "si";
                     $planilla_presente_id = $present['id'];
+                    $obs = $present['observacion'];
                 }
 
 
@@ -159,6 +161,7 @@ class StudentsController extends SecureBaseController
                         'nombre_papa' => $students[$k]['nombre_papa'],
                         'tel_papa' => $students[$k]['tel_papa'],
                         'tel_mama' => $students[$k]['tel_mama'],
+                        'observacion' => $obs,
                         );
                 }else{
                     if(strcmp($presente, "si") == 0 ){
@@ -167,7 +170,8 @@ class StudentsController extends SecureBaseController
                             'nombre_mama' => $students[$k]['nombre_mama'],
                             'nombre_papa' => $students[$k]['nombre_papa'],
                             'tel_papa' => $students[$k]['tel_papa'],
-                            'tel_mama' => $students[$k]['tel_mama'],);
+                            'tel_mama' => $students[$k]['tel_mama'],
+                            'observacion' => $obs,);
                     }
                 }
             }
