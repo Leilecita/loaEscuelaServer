@@ -19,7 +19,6 @@ class PlanillasController extends BaseController
 
 
     function getAll(){
-
         $this->returnSuccess(200, $this->model->findAllPlanillas($this->getFilters(), $this->getPaginator()));
 
     }
