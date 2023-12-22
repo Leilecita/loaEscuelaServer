@@ -6,10 +6,10 @@
  * Time: 20:19
  */
 
-require_once 'SecureBaseController.php';
+require_once 'BaseController.php';
 require_once  __DIR__.'/../models/PlanillaModel.php';
 
-class PlanillasController extends SecureBaseController
+class PlanillasController extends BaseController
 {
 
     function __construct(){
@@ -21,8 +21,6 @@ class PlanillasController extends SecureBaseController
     function getAll(){
 
         $this->returnSuccess(200, $this->model->findAllPlanillas($this->getFilters(), $this->getPaginator()));
-
-
 
     }
 

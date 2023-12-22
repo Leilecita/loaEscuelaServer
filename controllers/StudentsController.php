@@ -13,7 +13,7 @@ require_once  __DIR__.'/../controllers/SeasonsController.php';
 require_once  __DIR__.'/../models/PlanillaModel.php';
 require_once  __DIR__.'/../models/PlanillaPresenteModel.php';
 
-class StudentsController extends SecureBaseController
+class StudentsController extends BaseController
 {
 
     private $seasonsController;
