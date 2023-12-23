@@ -161,6 +161,7 @@ class StudentsController extends SecureBaseController
                         'nombre_papa' => $students[$k]['nombre_papa'],
                         'tel_papa' => $students[$k]['tel_papa'],
                         'tel_mama' => $students[$k]['tel_mama'],
+                        'tel_adulto' => $students[$k]['tel_adulto'],
                         'observacion' => $obs,
                         );
                 }else{
@@ -171,6 +172,7 @@ class StudentsController extends SecureBaseController
                             'nombre_papa' => $students[$k]['nombre_papa'],
                             'tel_papa' => $students[$k]['tel_papa'],
                             'tel_mama' => $students[$k]['tel_mama'],
+                            'tel_adulto' => $students[$k]['tel_adulto'],
                             'observacion' => $obs,);
                     }
                 }
