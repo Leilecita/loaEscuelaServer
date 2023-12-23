@@ -12,6 +12,7 @@ require_once  __DIR__.'/../models/StudentModel.php';
 require_once  __DIR__.'/../controllers/SeasonsController.php';
 require_once  __DIR__.'/../models/PlanillaModel.php';
 require_once  __DIR__.'/../models/PlanillaPresenteModel.php';
+require_once  __DIR__.'/../models/PlanillaAlumnoModel.php';
 
 class StudentsController extends SecureBaseController
 {
@@ -19,6 +20,7 @@ class StudentsController extends SecureBaseController
     private $seasonsController;
     private $planillas;
     private $planillas_presentes;
+    private $planillas_alumnos;
 
     function __construct(){
         parent::__construct();
@@ -26,6 +28,7 @@ class StudentsController extends SecureBaseController
         $this->model = new StudentModel();
         $this->planillas = new PlanillaModel();
         $this->planillas_presentes = new PlanillaPresenteModel();
+        $this->planillas_alumnos = new PlanillaAlumnoModel();
     }
 
         function checkExistStudent(){
@@ -135,6 +138,11 @@ class StudentsController extends SecureBaseController
 
             for ($k = 0; $k < count($students); ++$k) {
 
+                //buscar la planilla alumno
+                $planilla_alumno = $this->planillas_alumnos->find(array('alumno_id = "' . $students[$k]['alumno_id'] . '"',
+                    'planilla_id = "'.$planilla['id']. '"' ));
+
+
                 //por alumo me traigo las clases pagas, tomadas y plata que debe
                 $report_takenandpaid_classes = $this->seasonsController->getPresentsBySeason($students[$k]['alumno_id']);
 
@@ -153,6 +161,7 @@ class StudentsController extends SecureBaseController
                 }
 
 
+
                 if($onlyPresents == "false"){
 
                     $reportStudent[] = array('student_id' => $students[$k]['student_id'] , 'dni' => $students[$k]['dni'], 'nombre' => $students[$k]['nombre'], 'apellido' => $students[$k]['apellido'], 'presente' => $presente,
@@ -163,6 +172,7 @@ class StudentsController extends SecureBaseController
                         'tel_mama' => $students[$k]['tel_mama'],
                         'tel_adulto' => $students[$k]['tel_adulto'],
                         'observacion' => $obs,
+                        'planilla_alumno_id' => $planilla_alumno['id'],
                         );
                 }else{
                     if(strcmp($presente, "si") == 0 ){
@@ -173,7 +183,8 @@ class StudentsController extends SecureBaseController
                             'tel_papa' => $students[$k]['tel_papa'],
                             'tel_mama' => $students[$k]['tel_mama'],
                             'tel_adulto' => $students[$k]['tel_adulto'],
-                            'observacion' => $obs,);
+                            'observacion' => $obs,
+                            'planilla_alumno_id' => $planilla_alumno['id'],);
                     }
                 }
             }
