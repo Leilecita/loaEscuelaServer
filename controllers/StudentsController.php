@@ -134,7 +134,8 @@ class StudentsController extends SecureBaseController
             $planilla_id = $planilla['id'] ;
             $filtersAssists[] = 'pa.planilla_id = "' . $planilla['id'] . '"';
 
-            $filtersAssists[] = 'pp.planilla_id = "' . $planilla['id'] . '"';
+            //nuebo<
+           // $filtersAssists[] = 'pp.planilla_id = "' . $planilla['id'] . '"';
 
             $students = $this->model->getStudentsAssists($filtersAssists, $this->getPaginator());
 
