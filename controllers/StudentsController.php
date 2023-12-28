@@ -115,7 +115,7 @@ class StudentsController extends SecureBaseController
 
 
 
-    function getStudentsByAssistsPlanilla($localFilter,$filtersAssists,$onlyPresents){
+    function getStudentsByAssistsPlanilla($localFilter,$filtersAssists,$onlyPresents, $orderby){
 
         //viene categoria y subcat, se busca planilla
 
@@ -133,11 +133,16 @@ class StudentsController extends SecureBaseController
 
             $planilla_id = $planilla['id'] ;
             $filtersAssists[] = 'pa.planilla_id = "' . $planilla['id'] . '"';
+            $filtersAssists[] = 'pa.planilla_id = "' . $planilla['id'] . '"';
 
-            //nuebo<
-           // $filtersAssists[] = 'pp.planilla_id = "' . $planilla['id'] . '"';
+            if($orderby == "alf"){
+                $orderby = "s.nombre";
+            }else{
+                $orderby = "pa_created";
+            }
 
-            $students = $this->model->getStudentsAssists($filtersAssists, $this->getPaginator());
+
+            $students = $this->model->getStudentsAssists($filtersAssists, $this->getPaginator(), $orderby);
 
             for ($k = 0; $k < count($students); ++$k) {
 
@@ -206,7 +211,7 @@ class StudentsController extends SecureBaseController
             if($_GET['categoria'] != "Todo" && $_GET['subcategoria'] != "Todo"){
 
 
-                $this->getStudentsByAssistsPlanilla($localFilter,$filtersAssists,$_GET['onlyPresents']);
+                $this->getStudentsByAssistsPlanilla($localFilter,$filtersAssists,$_GET['onlyPresents'], $_GET['orderby']);
 
             }else{
                // $this->getStudentsByAssistsGeneral($localFilter,$filtersAssists);
