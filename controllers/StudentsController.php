@@ -136,9 +136,9 @@ class StudentsController extends SecureBaseController
             $filtersAssists[] = 'pa.planilla_id = "' . $planilla['id'] . '"';
 
             if($orderby == "alf"){
-                $orderby = "s.nombre";
+                $orderby = "s.nombre ASC";
             }else{
-                $orderby = "pa_created";
+                $orderby = "pa_created DESC";
             }
 
 

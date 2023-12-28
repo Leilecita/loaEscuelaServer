@@ -59,7 +59,7 @@ class StudentModel extends BaseModel
     function getStudentsAssists($filters=array(),$paginator=array(),$orderby){
         $conditions = join(' AND ',$filters);
         $query = 'SELECT *, pa.created as pa_created, s.id as student_id FROM students s JOIN planillas_alumnos pa ON s.id = pa.alumno_id '.( empty($filters) ?  '' : ' WHERE '.$conditions ).'
- ORDER BY '.$orderby.' DESC LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
+ ORDER BY '.$orderby.' LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
         return $this->getDb()->fetch_all($query);
 
     }
