@@ -134,11 +134,11 @@ class StudentsController extends SecureBaseController
             $planilla_id = $planilla['id'] ;
             $filtersAssists[] = 'pa.planilla_id = "' . $planilla['id'] . '"';
 
-           /* if($orderby == "alf"){
-                $orderby = "nombre_al ASC";
+            if($orderby == "alf"){
+                $orderby = "s.nombre ASC";
             }else{
                 $orderby = "pa_created DESC";
-            }*/
+            }
 
 
             $students = $this->model->getStudentsAssists($filtersAssists, $this->getPaginator(), $orderby);
