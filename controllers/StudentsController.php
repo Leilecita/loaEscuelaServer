@@ -211,6 +211,7 @@ class StudentsController extends SecureBaseController
 
 
                 $this->getStudentsByAssistsPlanilla($localFilter,$filtersAssists,$_GET['onlyPresents'], $_GET['orderby']);
+                error_log($_GET['orderby']);
 
             }else{
                // $this->getStudentsByAssistsGeneral($localFilter,$filtersAssists);
