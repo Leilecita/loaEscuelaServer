@@ -180,6 +180,7 @@ class StudentsController extends SecureBaseController
                         'tel_adulto' => $students[$k]['tel_adulto'],
                         'observacion' => $obs,
                         'planilla_alumno_id' => $planilla_alumno['id'],
+                        'student_observation' =>  $students[$k]['observation'],
                         );
                 }else{
                     if(strcmp($presente, "si") == 0 ){
@@ -191,6 +192,7 @@ class StudentsController extends SecureBaseController
                             'tel_mama' => $students[$k]['tel_mama'],
                             'tel_adulto' => $students[$k]['tel_adulto'],
                             'observacion' => $obs,
+                            'student_observation' =>  $students[$k]['observation'],
                             'planilla_alumno_id' => $planilla_alumno['id'],);
                     }
                 }
