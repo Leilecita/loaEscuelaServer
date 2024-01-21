@@ -22,11 +22,12 @@ class PlanillaPresenteModel extends BaseModel
 
     }
 
-    function findAllPresentsByStudent($filters=array(),$paginator=array()){
+    function findAllPresentsByStudent($filters=array()){
         $conditions = join(' AND ',$filters);
-        $query = 'SELECT * FROM '.$this->tableName .( empty($filters) ?  '' : ' WHERE '.$conditions ).' ORDER BY fecha_presente DESC LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
+        $query = 'SELECT * FROM '.$this->tableName .( empty($filters) ?  '' : ' WHERE '.$conditions ).' ORDER BY fecha_presente DESC ';
         return $this->getDb()->fetch_all($query);
     }
+
 
     function getPresentsGroupByDate($filters=array() ,$paginator=array()){
         $conditions = join(' AND ',$filters);

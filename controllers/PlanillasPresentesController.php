@@ -67,7 +67,8 @@ class PlanillasPresentesController extends SecureBaseController
     function getPresentsByStudent(){
 
        // $presentes = $this->model->findAll(array('alumno_id = "' . $_GET['id'] . '"'), $this->getPaginator());
-        $presentes = $this->model->findAllPresentsByStudent(array('alumno_id = "' . $_GET['id'] . '"'), $this->getPaginator());
+        //$presentes = $this->model->findAllPresentsByStudent(array('alumno_id = "' . $_GET['id'] . '"'), $this->getPaginator());
+        $presentes = $this->model->findAllPresentsByStudent(array('alumno_id = "' . $_GET['id'] . '"'));
         $report = array();
 
         for ($l = 0; $l < count($presentes); ++$l) {
