@@ -123,6 +123,7 @@ class StudentsController extends SecureBaseController
 
         //hacer lo de las season
 
+
         $planilla = $this->planillas->getPlanillaByCategoriaAndSubCat($localFilter);
 
         $reportStudent = array();
@@ -167,7 +168,7 @@ class StudentsController extends SecureBaseController
                     $obs = $present['observacion'];
                 }
 
-
+                error_log($onlyPresents);
 
                 if($onlyPresents == "false"){
 
@@ -255,6 +256,7 @@ class StudentsController extends SecureBaseController
             $localFilter[] = 'anio = "' . $this->getSeason($date[1],$date[0]) . '"';
 
         }
+
 
         return $localFilter;
     }
