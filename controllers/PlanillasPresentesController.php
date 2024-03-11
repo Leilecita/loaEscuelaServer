@@ -25,6 +25,19 @@ class PlanillasPresentesController extends SecureBaseController
         $this->incomes = new IncomeModel();
     }
 
+    function post(){
+
+
+        $data = (array)json_decode(file_get_contents("php://input"));
+        $exist = $this->model->find(array('planilla_id = ' . $data['planilla_id'] , 'alumno_id = ' . $data['alumno_id'] , 'fecha_presente = "' . $data['fecha_presente'] . '"'));
+
+        if($exist){
+            $this->returnError(204,"Ya existe un presente para este día en este alumno, refresque la lista.");
+        }else{
+            parent::post();
+        }
+    }
+
 
 
     function getDates($data){
