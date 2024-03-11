@@ -62,6 +62,16 @@ class PlanillasPresentesController extends SecureBaseController
         return $pl;
     }
 
+    function getPlanillasByYearSinPaginator($datePresent){
+
+        $date = explode("-", $datePresent);
+
+        $pl = $this->planillas->findAllAll(array('anio = "'.$this->getSeason($date[1],$date[0]).'"'));
+
+        return $pl;
+    }
+
+
 
 
     function getPresentsByStudent(){
@@ -90,7 +100,7 @@ class PlanillasPresentesController extends SecureBaseController
 
         for ($l = 0; $l < count($presents); ++$l) {
 
-            $list_planillas_by_year = $this->getPlanillasByYear($presents[$l]['fecha_presente']);
+            $list_planillas_by_year = $this->getPlanillasByYearSinPaginator($presents[$l]['fecha_presente']);
 
             $dates = $this->getDates($presents[$l]['fecha_presente']);
 
@@ -118,7 +128,7 @@ class PlanillasPresentesController extends SecureBaseController
                 $reportPlanilla[] = array('nombre_planilla' => $list_planillas_by_year[$j]['subcategoria'], 'cant_presentes' => $planilla_presentes);
             }
 
-            $reportItems[] = array('day' => $presents[$l]['fecha_presente'], 'tot_presents' => $tot_presents,'planillas' => $reportPlanilla , 'tot_incomes' => $sum_tot_amount,
+            $reportItems[] = array('day' => $presents[$l]['fecha_presente'], 'tot_presents' => $tot_presents, 'planillas' => $reportPlanilla , 'tot_incomes' => $sum_tot_amount,
                 'tot_incomes_escuela' => $sum_tot_escuela, 'tot_incomes_colonia' => $sum_tot_colonia, 'tot_incomes_highschool' => $sum_tot_highschool);
 
         }
