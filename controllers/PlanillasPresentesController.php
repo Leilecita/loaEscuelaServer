@@ -32,7 +32,7 @@ class PlanillasPresentesController extends SecureBaseController
         $exist = $this->model->find(array('planilla_id = ' . $data['planilla_id'] , 'alumno_id = ' . $data['alumno_id'] , 'fecha_presente = "' . $data['fecha_presente'] . '"'));
 
         if($exist){
-            $this->returnError(204,"Ya existe un presente para este día en este alumno, refresque la lista.");
+            $this->returnSuccess(200,$exist);
         }else{
             parent::post();
         }
