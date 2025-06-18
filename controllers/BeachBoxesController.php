@@ -90,6 +90,8 @@ class BeachBoxesController  extends BaseController
             $filters_out[] = '(category like "%'."colonia".'%" || category like "%'."highschool".'%")';
         }
 
+        $filters_out[] = 'outcome_place = "'.$payment_place.'"';
+
         $amount_outcomes_esc = $this->outcomes->sumAmountOutcomes($filters_out);
 
         $filters3 = parent::getFilters();
