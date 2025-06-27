@@ -25,11 +25,15 @@ abstract class SecureBaseController extends BaseController
     }
 
     function _checkSession(){
+
+       // error_log("HEADERS RECIBIDOS: " . print_r(getallheaders(), true));
         $this->currentUser = SessionHelper::getCurrentUser();
         if($this->getCurrentUser() == null) {
             error_log("checksession null");
             $this->returnError(401,'Session invalida');
             exit;
+        }else{
+            error_log("checksession");
         }
     }
 

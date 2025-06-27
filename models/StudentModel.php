@@ -23,6 +23,8 @@ class StudentModel extends BaseModel
     function findAllStudents($filters=array(),$paginator=array(), $orderby){
         $conditions = join(' AND ',$filters);
         $query = 'SELECT * FROM '.$this->tableName .( empty($filters) ?  '' : ' WHERE '.$conditions ).' ORDER BY '.$orderby.' LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
+        //error_log('entra');
+        //error_log($query);
         return $this->getDb()->fetch_all($query);
     }
 
@@ -63,13 +65,13 @@ class StudentModel extends BaseModel
 
     }
 
-    //probar este
-    function getStudentsAssists2($filters=array(),$paginator=array()){
+
+    function getStudentsAssistsOnlyPresent($filters=array(),$paginator=array(),$orderby){
         $conditions = join(' AND ',$filters);
-        $query = 'SELECT *, pp.fecha_presente fecha_pre, pa.created as pa_created, s.id as student_id FROM students s JOIN planillas_alumnos pa ON s.id = pa.alumno_id JOIN 
-planillas_presentes pp ON pa.planilla_id = pp.planilla_id and pa.alumno_id = pp.alumno_id '.( empty($filters) ?  '' : ' WHERE '.$conditions ).'
- ORDER BY pa_created, fecha_pre DESC
-        LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
+        $query = 'SELECT *, pp.fecha_presente as fecha_pre, pa.created as pa_created, s.id as student_id, s.nombre as nombre_st, pa.current_student as current_st FROM students s JOIN planillas_alumnos pa ON s.id = pa.alumno_id JOIN 
+planillas_presentes pp ON pa.planilla_id = pp.planilla_id and pa.alumno_id = pp.alumno_id'.( empty($filters) ?  '' : ' WHERE '.$conditions ).' LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
+
+
         return $this->getDb()->fetch_all($query);
 
     }
