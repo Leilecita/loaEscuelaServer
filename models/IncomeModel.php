@@ -29,6 +29,20 @@ class IncomeModel extends BaseModel
 
     }
 
+    function sumAmountIncomesByDateNego($filters=array()){
+        $conditions = join(' AND ',$filters);
+        $query = 'SELECT SUM(i.amount) as total FROM incomes i JOIN incomes_class_courses ic ON i.id = ic.income_id JOIN class_courses c ON c.id = ic.class_course_id '.( empty($filters) ?  '' : ' WHERE '.$conditions );
+        $response= $this->getDb()->fetch_row($query);
+
+        if($response['total'] != null){
+            return $response['total'];
+        }else{
+            $response['total']=0;
+            return   $response['total'];
+        }
+
+    }
+
 
 
     function getAllIncomesByDate($dateSince,$dateTo,$paginator){
@@ -60,7 +74,7 @@ class IncomeModel extends BaseModel
         //  where icc.class_course_id= cc.id and cc.student_id=s.id and i.id=icc.income_id order by i.created desc LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
 
 
-        $query= 'SELECT icc.detail as detail, cc.category as category, i.id as income_id, i.amount as amount, i.payment_method as payment_method ,i.created as income_created, concat(s.nombre," ",s.apellido) as description FROM `incomes_class_courses` icc,class_courses cc, students s,
+        $query= 'SELECT cc.id as class_course_id, icc.detail as detail, cc.category as category, cc.sub_category as sub_category, i.id as income_id, i.amount as amount, i.payment_method as payment_method , i.payment_place as payment_place ,i.created as income_created, concat(s.nombre," ",s.apellido) as description, s.id as student_id FROM `incomes_class_courses` icc,class_courses cc, students s,
  incomes i '.( empty($filters) ?  '' : ' WHERE '.$conditions ).' order by i.created desc LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
 
 

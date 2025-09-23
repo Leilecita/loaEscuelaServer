@@ -133,6 +133,10 @@ class StudentsController extends SecureBaseController
             $planilla_id = $planilla['id'] ;
             $filtersAssists[] = 'pa.planilla_id = "' . $planilla['id'] . '"';
 
+            if(isset($_GET['current_student'])){
+                $filtersAssists[] = 'pa.current_student = "' . $_GET['current_student'] . '"';
+            }
+
             if($orderby == "alf"){
                 $orderby = "current_st DESC, nombre_st ASC, pa_created DESC";
             }else{
@@ -180,8 +184,11 @@ class StudentsController extends SecureBaseController
                         'tel_papa' => $students[$k]['tel_papa'],
                         'tel_mama' => $students[$k]['tel_mama'],
                         'tel_adulto' => $students[$k]['tel_adulto'],
+                        'category' => $students[$k]['category'],
+                        'sub_category' => $students[$k]['sub_category'],
                         'observacion' => $obs,
                         'planilla_alumno_id' => $planilla_alumno['id'],
+                        'current_student' => $planilla_alumno['current_student'],
                         'student_observation' =>  $students[$k]['observation'],
                         );
                 }else{
@@ -193,9 +200,12 @@ class StudentsController extends SecureBaseController
                             'tel_papa' => $students[$k]['tel_papa'],
                             'tel_mama' => $students[$k]['tel_mama'],
                             'tel_adulto' => $students[$k]['tel_adulto'],
+                            'category' => $students[$k]['category'],
+                            'sub_category' => $students[$k]['sub_category'],
                             'observacion' => $obs,
                             'student_observation' =>  $students[$k]['observation'],
-                            'planilla_alumno_id' => $planilla_alumno['id'],);
+                            'planilla_alumno_id' => $planilla_alumno['id'],
+                            'current_student' => $planilla_alumno['current_student'],);
                     }
                 }
             }

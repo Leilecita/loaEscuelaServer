@@ -59,7 +59,7 @@ class StudentModel extends BaseModel
 
     function getStudentsAssists($filters=array(),$paginator=array(),$orderby){
         $conditions = join(' AND ',$filters);
-        $query = 'SELECT *, pa.created as pa_created, s.id as student_id, s.nombre as nombre_st, pa.current_student as current_st FROM students s JOIN planillas_alumnos pa ON s.id = pa.alumno_id '.( empty($filters) ?  '' : ' WHERE '.$conditions ).'
+        $query = 'SELECT *, s.sub_category as sub_category,s.category as category, pa.created as pa_created, s.id as student_id, s.nombre as nombre_st, pa.current_student as current_st FROM students s JOIN planillas_alumnos pa ON s.id = pa.alumno_id '.( empty($filters) ?  '' : ' WHERE '.$conditions ).'
  ORDER BY '.$orderby.' LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
         return $this->getDb()->fetch_all($query);
 
@@ -68,7 +68,7 @@ class StudentModel extends BaseModel
 
     function getStudentsAssistsOnlyPresent($filters=array(),$paginator=array(),$orderby){
         $conditions = join(' AND ',$filters);
-        $query = 'SELECT *, pp.fecha_presente as fecha_pre, pa.created as pa_created, s.id as student_id, s.nombre as nombre_st, pa.current_student as current_st FROM students s JOIN planillas_alumnos pa ON s.id = pa.alumno_id JOIN 
+        $query = 'SELECT *, pp.fecha_presente as fecha_pre, pa.created as pa_created, s.id as student_id, s.nombre as nombre_st, pa.current_student as current_st, s.category as category FROM students s JOIN planillas_alumnos pa ON s.id = pa.alumno_id JOIN 
 planillas_presentes pp ON pa.planilla_id = pp.planilla_id and pa.alumno_id = pp.alumno_id'.( empty($filters) ?  '' : ' WHERE '.$conditions ).' LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
 
 

@@ -8,13 +8,19 @@
 
 require_once 'BaseController.php';
 require_once  __DIR__.'/../models/PlanillaAlumnoModel.php';
+require_once  __DIR__.'/../models/StudentModel.php';
+require_once  __DIR__.'/../models/PlanillaModel.php';
 
 class PlanillasAlumnosController extends BaseController
 {
+    private $students;
+    private $planillas;
 
     function __construct(){
         parent::__construct();
         $this->model = new PlanillaAlumnoModel();
+        $this->students = new StudentModel();
+        $this->planillas = new PlanillaModel();
     }
 
 
@@ -27,6 +33,22 @@ class PlanillasAlumnosController extends BaseController
 
         $student = $this->model->find($filters);
         return $student;
+    }
+
+    function checkAssignedCategory($student_id, $planilla_id){
+
+        $student = $this->students->findById($student_id);
+        $planilla = $this->planillas->findById($planilla_id);
+
+        if($student['category'] != $planilla['categoria']){
+            $this->students->update($student_id, array('category' => $planilla['categoria']));
+            error_log($planilla['categoria']);
+        }
+
+        if($student['sub_category'] != $planilla['subcategoria']){
+            $this->students->update($student_id, array('sub_category' => $planilla['subcategoria']));
+            error_log($planilla['subcategoria']);
+        }
     }
 
     function post(){
@@ -43,6 +65,8 @@ class PlanillasAlumnosController extends BaseController
             $this->returnSuccess(201,$student);
 
         }else{
+
+            $this->checkAssignedCategory($data['alumno_id'], $data['planilla_id']);
 
             $res = $this->model->save($data);
             if($res<0){

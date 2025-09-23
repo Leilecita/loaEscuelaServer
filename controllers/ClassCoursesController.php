@@ -53,6 +53,8 @@ class ClassCoursesController  extends BaseController
     function post(){
         $this->beforeMethod();
         $data = (array)json_decode(file_get_contents("php://input"));
+
+        error_log("DATA RECIBIDA: " . json_encode($data));
         unset($data['id']);
 
         $amount_income = 0;
@@ -149,4 +151,10 @@ class ClassCoursesController  extends BaseController
         $this->returnSuccess(200,$reportCourse);
     }
 
+    function getIncomesByStudent(){
+        $list_all= $this->model->getIncomesByStudentId($this->getFilters(),$this->getPaginator());
+        $this->returnSuccess(200,$list_all);
+    }
+
 }
+

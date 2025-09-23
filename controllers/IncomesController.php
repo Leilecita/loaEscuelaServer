@@ -30,9 +30,17 @@ class IncomesController extends BaseController
         if(isset($_GET['payment_place'])){
             $filters[] = 'i.payment_place = "'.$_GET['payment_place'].'"';
         }
+        if(isset($_GET['payment_method'])){
+            $filters[] = 'i.payment_method = "'.$_GET['payment_method'].'"';
+        }
+
+        if(isset($_GET['category'])){
+            $filters[] = 'cc.category = "'.$_GET['category'].'"';
+        }
+
+
 
         $report = $this->model->getAllIncomes($this->getPaginator(),$filters);
-
 
         $this->returnSuccess(200,$report);
     }

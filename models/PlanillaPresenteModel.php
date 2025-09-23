@@ -29,11 +29,59 @@ class PlanillaPresenteModel extends BaseModel
     }
 
 
-    function getPresentsGroupByDate($filters=array() ,$paginator=array()){
+    function getPresentsGroupByDate2($filters=array() ,$paginator=array()){
         $conditions = join(' AND ',$filters);
         $query = 'SELECT * FROM planillas_presentes '.( empty($filters) ?  '' : ' WHERE '.$conditions ).' group by DAY(fecha_presente), MONTH(fecha_presente), YEAR (fecha_presente) ORDER BY fecha_presente DESC LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
         return $this->getDb()->fetch_all($query);
     }
+
+    function getPresentsGroupByDate($filters = array(), $paginator = array()) {
+        $conditions = join(' AND ', $filters);
+
+        $query = "
+        SELECT MIN(fecha) as fecha_presente
+        FROM (
+            -- Días con presentes
+            SELECT fecha_presente as fecha
+            FROM planillas_presentes
+            " . (empty($filters) ? '' : 'WHERE ' . $conditions) . "
+            UNION
+            -- Días con pagos
+            SELECT DATE(created) as fecha
+            FROM incomes
+        ) AS dias
+        GROUP BY fecha
+        ORDER BY fecha DESC
+        LIMIT " . (int)$paginator['limit'] . " OFFSET " . (int)$paginator['offset'] . "
+    ";
+
+        return $this->getDb()->fetch_all($query);
+    }
+
+    function getPresentsGroupByMonth($filters = array(), $paginator = array()) {
+        $conditions = join(' AND ', $filters);
+
+        $query = "
+        SELECT MIN(fecha) as fecha_presente
+        FROM (
+            -- Días con presentes
+            SELECT fecha_presente as fecha
+            FROM planillas_presentes
+            " . (empty($filters) ? '' : 'WHERE ' . $conditions) . "
+            UNION
+            -- Días con pagos
+            SELECT DATE(created) as fecha
+            FROM incomes
+        ) AS dias
+        GROUP BY DATE_FORMAT(fecha, '%Y-%m')
+        ORDER BY fecha_presente DESC
+        LIMIT " . (int)$paginator['limit'] . " OFFSET " . (int)$paginator['offset'] . "
+    ";
+
+        return $this->getDb()->fetch_all($query);
+    }
+
+
 
     function getPresentsGroupByDateSinPag($filters=array()){
         $conditions = join(' AND ',$filters);

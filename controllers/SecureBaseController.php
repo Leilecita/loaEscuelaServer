@@ -33,7 +33,7 @@ abstract class SecureBaseController extends BaseController
             $this->returnError(401,'Session invalida');
             exit;
         }else{
-            error_log("checksession");
+           //    error_log("checksession");
         }
     }
 
