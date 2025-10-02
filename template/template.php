@@ -1,6 +1,30 @@
 
+
 <?php
-function render($data,$user,$delivery_date){
+
+function render() {
+    ob_start(); // iniciar buffer de salida HTML
+    ?>
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; font-size: 14px; text-align: center; margin-top: 50px; }
+            h1 { color: #333; }
+            p { color: #666; }
+        </style>
+    </head>
+    <body>
+        <h1>PDF de Prueba</h1>
+        <p>Este es un PDF generado solo para testear la funcionalidad.</p>
+        <p>No contiene datos reales.</p>
+    </body>
+    </html>
+    <?php
+    return ob_get_clean(); // devuelve el HTML como string
+}
+
+
+function render2($data,$user,$delivery_date){
     ob_start();
     ?>
 

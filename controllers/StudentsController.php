@@ -284,10 +284,12 @@ class StudentsController extends SecureBaseController
 
             $planilla = $this->planillas->getPlanillaByCategoriaAndSubCat($localFilter);
             $total_alumnos = 0;
+            $total_active_students = 0;
             $total_presents = 0;
 
             if($planilla){
                 $total_alumnos = $this->model->countStudents(array('pa.planilla_id = '.$planilla['id']));
+                $total_active_students = $this->model->countStudents(array('pa.planilla_id = '.$planilla['id'],'pa.current_student = "'.'si'.'"'));
 
                 $total_presents = $this->planillas_presentes->countPresentes(array('fecha_presente = "'.$_GET['date']. '"', 'planilla_id = "'.$planilla['id']. '"' ));
             }
@@ -296,8 +298,7 @@ class StudentsController extends SecureBaseController
 
         }  //VARIAS PLANILLAS SELECCIONADA, POR EJEMPLO ESCUELA, TODOS, tiene que si o is haber selccionado categ y sub cat
 
-
-        $res = array('tot_students' => $total_alumnos, 'tot_presents' => $total_presents);
+        $res = array('tot_students' => $total_alumnos,'tot_active_students' => $total_active_students, 'tot_presents' => $total_presents);
         $this->returnSuccess(200,$res);
     }
 
