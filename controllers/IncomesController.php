@@ -46,11 +46,9 @@ class IncomesController extends BaseController
         $this->returnSuccess(200,$report);
     }
 
-
-
-
     private function renderTemplateIncome($created, $nombre, $amount, $detail) {
-        $date = $created;
+        $dateObj = new DateTime($created);
+        $date = $dateObj->format('d/m/Y');
 
         $html = "
     <html>
@@ -58,21 +56,91 @@ class IncomesController extends BaseController
         <meta charset='utf-8'>
         <title>Recibo</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            h1 { text-align: center; }
-            .content { margin-top: 50px; font-size: 18px; }
-            .line { margin: 15px 0; }
-            .bold { font-weight: bold; }
+            body { 
+                font-family: Arial, sans-serif; 
+                margin: 20px; 
+                font-size: 16px;
+            }
+            .container {
+                border: 1px solid #000;
+                padding: 20px;
+            }
+            .header {
+                border: 1px solid #000;
+                padding: 10px;
+                margin-bottom: 30px;
+            }
+            .header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start; /* título y logo arriba */
+                margin-bottom: 5px;
+            }
+            .header .title {
+                font-size: 22px;
+                font-weight: bold;
+                margin-left: 8px;
+            }
+            .header .subtitle {
+                font-size: 16px;
+                 margin-left: 8px;
+                  margin-top: 8px;
+            }
+            .logo {
+                width: 80px;
+                height: auto;
+                padding: 8px;
+            }
+            .content {
+                margin-top: 20px;
+                line-height: 2;
+            }
+            .label {
+                font-style: italic;
+                font-weight: bold;
+                display: inline-block;
+                width: 180px;
+                font-size: 16px;
+            }
+            .value {
+                flex: 1;        
+                word-wrap: break-word;
+                font-size: 18px;
+            }
         </style>
     </head>
     <body>
-        <h1>ESCUELA DE SURF LOA COLONIA 2026</h1>
-
-        <div class='content'>
-            <div class='line'><span class='bold'>Recibimos de:</span> {$nombre}</div>
-            <div class='line'><span class='bold'>La cantidad de:</span> {$amount}</div>
-            <div class='line'><span class='bold'>En concepto de:</span> {$detail}</div>
-            <div class='line'><span class='bold'>Al:</span> {$date}</div>
+        <div class='container'>
+            <table class='header' style='width:100%; border-collapse:collapse;'>
+                <tr>
+                    <td style='text-align:left;''>
+                        <div class='title' >ESCUELA DE SURF LOA</div>
+                        <div class='subtitle' >COLONIA 2026</div>
+                    </td>
+                    <td style='text-align:right; vertical-align:middle;'>
+                        <img src='https://www.loasurf.com.ar/img/logoloa.png' class='logo' />
+                    </td>
+                </tr>
+            </table>
+            
+            <div class='content'>
+                <div>
+                    <span class='label'>Recibimos de</span> 
+                    <span class='value value-nombre'>{$nombre}</span>
+                </div>
+                <div>
+                    <span class='label'>la cantidad de</span> 
+                    <span class='value value-nombre'>{$amount}</span>
+                </div>
+                <div>
+                    <span class='label'>en concepto de</span> 
+                    <span class='value '>{$detail}</span>
+                </div>
+                <div>
+                    <span class='label'>al</span> 
+                    <span class='value value-nombre'>{$date}</span>
+                </div>
+            </div>
         </div>
     </body>
     </html>
@@ -84,8 +152,8 @@ class IncomesController extends BaseController
 
     function generatePdfTest() {
         global $WKCONFIG;
-        //$WKCONFIG['PATH'] = '/usr/local/bin/wkhtmltopdf';
-        $WKCONFIG['PATH'] = '/usr/bin/wkhtmltopdf';
+        $WKCONFIG['PATH'] = '/usr/local/bin/wkhtmltopdf';
+        //$WKCONFIG['PATH'] = '/usr/bin/wkhtmltopdf';
 
         // Evita el error qt_mac_loadMenuNib
         putenv('TMPDIR=/tmp');
