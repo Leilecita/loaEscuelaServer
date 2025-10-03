@@ -153,7 +153,7 @@ class IncomesController extends BaseController
     function generatePdfTest() {
         global $WKCONFIG;
         //$WKCONFIG['PATH'] = '/usr/local/bin/wkhtmltopdf';
-        $WKCONFIG['PATH'] = '/usr/bin/wkhtmltopdf';
+      //  $WKCONFIG['PATH'] = '/usr/bin/wkhtmltopdf';
 
         // Evita el error qt_mac_loadMenuNib
         putenv('TMPDIR=/tmp');
