@@ -18,9 +18,18 @@ class UsersController extends SecureBaseController
     public function get()
     {
         $this->beforeMethod();
+        if(isset($_GET['method'])){
+            $this->method();
+        }else{
+            $user= $this->getCurrentUser();
+            $this->returnSuccess(200,array("token" => $user['token']));
+        }
 
-        $user= $this->getCurrentUser();
-        $this->returnSuccess(200,array("token" => $user['token']));
+
+    }
+
+    function getAll(){
+        $this->returnSuccess(200,$this->getModel()->findAllAll());
     }
 
 }
