@@ -13,6 +13,7 @@ require_once  __DIR__.'/../controllers/SeasonsController.php';
 require_once  __DIR__.'/../models/PlanillaModel.php';
 require_once  __DIR__.'/../models/PlanillaPresenteModel.php';
 require_once  __DIR__.'/../models/PlanillaAlumnoModel.php';
+require_once  __DIR__.'/../models/ComplementaryInformationModel.php';
 
 class StudentsController extends SecureBaseController
 {
@@ -21,6 +22,7 @@ class StudentsController extends SecureBaseController
     private $planillas;
     private $planillas_presentes;
     private $planillas_alumnos;
+    private $complementary_information;
 
     function __construct(){
         parent::__construct();
@@ -29,6 +31,7 @@ class StudentsController extends SecureBaseController
         $this->planillas = new PlanillaModel();
         $this->planillas_presentes = new PlanillaPresenteModel();
         $this->planillas_alumnos = new PlanillaAlumnoModel();
+        $this->complementary_information = new ComplementaryInformationModel();
     }
 
         function checkExistStudent(){
@@ -175,6 +178,41 @@ class StudentsController extends SecureBaseController
                     $obs = $present['observacion'];
                 }
 
+                $complementary_information = $this->complementary_information->find(array('student_id = "' . $students[$k]['student_id'] . '"',));
+                if($complementary_information){
+                    $autorizado1_nombre = $complementary_information['autorizado1_nombre'];
+                    $autorizado1_dni = $complementary_information['autorizado1_dni'];
+                    $autorizado1_parentesco = $complementary_information['autorizado1_parentesco'];
+
+                    $autorizado2_nombre = $complementary_information['autorizado2_nombre'];
+                    $autorizado2_dni = $complementary_information['autorizado2_dni'];
+                    $autorizado2_parentesco = $complementary_information['autorizado2_parentesco'];
+
+                    $autorizado3_nombre = $complementary_information['autorizado3_nombre'];
+                    $autorizado3_dni = $complementary_information['autorizado3_dni'];
+                    $autorizado3_parentesco = $complementary_information['autorizado3_parentesco'];
+
+                    $salud = $complementary_information['salud'];
+                    $deportes = $complementary_information['deportes'];
+                    $sabde_nadar = $complementary_information['sabe_nadar'];
+                }else{
+                    $autorizado1_nombre = '';
+                    $autorizado1_dni = '';
+                    $autorizado1_parentesco = '';
+
+                    $autorizado2_nombre = '';
+                    $autorizado2_dni = '';
+                    $autorizado2_parentesco = '';
+
+                    $autorizado3_nombre = '';
+                    $autorizado3_dni = '';
+                    $autorizado3_parentesco ='';
+
+                    $salud = '';
+                    $deportes = '';
+                    $sabe_nadar = '';
+                }
+
                 if($onlyPresents == "false"){
 
                     $reportStudent[] = array('student_id' => $students[$k]['student_id'] , 'dni' => $students[$k]['dni'], 'nombre' => $students[$k]['nombre'], 'apellido' => $students[$k]['apellido'], 'presente' => $presente,
@@ -190,6 +228,21 @@ class StudentsController extends SecureBaseController
                         'planilla_alumno_id' => $planilla_alumno['id'],
                         'current_student' => $planilla_alumno['current_student'],
                         'student_observation' =>  $students[$k]['observation'],
+
+                        'autorizado1_nombre' => $autorizado1_nombre,
+                        'autorizado1_dni' => $autorizado1_dni,
+                        'autorizado1_parentesco' =>  $autorizado1_parentesco,
+
+                        'autorizado2_nombre' => $autorizado2_nombre,
+                        'autorizado2_dni' => $autorizado2_dni,
+                        'autorizado2_parentesco' => $autorizado2_parentesco,
+
+                        'autorizado3_nombre' => $autorizado3_nombre,
+                        'autorizado3_dni' => $autorizado3_dni,
+                        'autorizado3_parentesco' => $autorizado3_parentesco,
+                        'salud' => $salud,
+                        'sabe_nadar' => $sabde_nadar,
+                        'deportes' => $deportes,
                         );
                 }else{
                     if(strcmp($presente, "si") == 0 ){
@@ -205,7 +258,23 @@ class StudentsController extends SecureBaseController
                             'observacion' => $obs,
                             'student_observation' =>  $students[$k]['observation'],
                             'planilla_alumno_id' => $planilla_alumno['id'],
-                            'current_student' => $planilla_alumno['current_student'],);
+                            'current_student' => $planilla_alumno['current_student'],
+
+
+                            'autorizado1_nombre' => $autorizado1_nombre,
+                            'autorizado1_dni' => $autorizado1_dni,
+                            'autorizado1_parentesco' =>  $autorizado1_parentesco,
+
+                            'autorizado2_nombre' => $autorizado2_nombre,
+                            'autorizado2_dni' => $autorizado2_dni,
+                            'autorizado2_parentesco' => $autorizado2_parentesco,
+
+                            'autorizado3_nombre' => $autorizado3_nombre,
+                            'autorizado3_dni' => $autorizado3_dni,
+                            'autorizado3_parentesco' => $autorizado3_parentesco,
+                            'salud' => $salud,
+                            'sabe_nadar' => $sabde_nadar,
+                            'deportes' => $deportes,);
                     }
                 }
             }

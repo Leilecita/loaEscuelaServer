@@ -49,6 +49,8 @@ class PlanillasAlumnosController extends BaseController
             $this->students->update($student_id, array('sub_category' => $planilla['subcategoria']));
             error_log($planilla['subcategoria']);
         }
+
+
     }
 
     function post(){

@@ -74,7 +74,8 @@ class IncomeModel extends BaseModel
         //  where icc.class_course_id= cc.id and cc.student_id=s.id and i.id=icc.income_id order by i.created desc LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
 
 
-        $query= 'SELECT cc.amount as course_amount, cc.id as class_course_id, icc.detail as detail, cc.category as category, cc.sub_category as sub_category, i.id as income_id, i.amount as amount, i.payment_method as payment_method , i.payment_place as payment_place ,i.created as income_created, concat(s.nombre," ",s.apellido) as description, s.id as student_id FROM `incomes_class_courses` icc,class_courses cc, students s,
+        $query= 'SELECT cc.amount as course_amount, cc.id as class_course_id, icc.detail as detail,icc.id as income_class_course_id, cc.category as category, cc.sub_category as sub_category, i.id as income_id, i.amount as amount, i.payment_method as payment_method , i.payment_place as payment_place ,i.created as income_created, concat(s.nombre," ",s.apellido) as description, s.id as student_id
+FROM `incomes_class_courses` icc,class_courses cc, students s,
  incomes i '.( empty($filters) ?  '' : ' WHERE '.$conditions ).' order by i.created desc LIMIT '.$paginator['limit'].' OFFSET '.$paginator['offset'];
 
 
