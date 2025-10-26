@@ -241,7 +241,7 @@ class StudentsController extends SecureBaseController
                         'autorizado3_dni' => $autorizado3_dni,
                         'autorizado3_parentesco' => $autorizado3_parentesco,
                         'salud' => $salud,
-                        'sabe_nadar' => $sabde_nadar,
+                        'sabe_nadar' => $sabe_nadar,
                         'deportes' => $deportes,
                         );
                 }else{
@@ -273,7 +273,7 @@ class StudentsController extends SecureBaseController
                             'autorizado3_dni' => $autorizado3_dni,
                             'autorizado3_parentesco' => $autorizado3_parentesco,
                             'salud' => $salud,
-                            'sabe_nadar' => $sabde_nadar,
+                            'sabe_nadar' => $sabe_nadar,
                             'deportes' => $deportes,);
                     }
                 }
