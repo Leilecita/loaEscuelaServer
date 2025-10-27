@@ -194,7 +194,7 @@ class StudentsController extends SecureBaseController
 
                     $salud = $complementary_information['salud'];
                     $deportes = $complementary_information['deportes'];
-                    $sabde_nadar = $complementary_information['sabe_nadar'];
+                    $sabe_nadar = $complementary_information['sabe_nadar'];
                 }else{
                     $autorizado1_nombre = '';
                     $autorizado1_dni = '';
