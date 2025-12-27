@@ -53,6 +53,9 @@ class SeasonsController extends BaseController
 
             $cant_presentes = $this->planillas_presentes->countPresentesByStudent($filters);
 
+            $filters[] = 'observacion LIKE "%regalo%"';
+            $cant_gift_classes = $this->planillas_presentes->countPresentesByStudent($filters);
+
             $filters2 = parent::getFilters();
 
             $filters2[] = 'student_id = "' . $student_id . '"';
@@ -73,7 +76,7 @@ class SeasonsController extends BaseController
 
 
             $reportPresentsBySeason[] = array('name' => $seasons[$k]['name'], 'cant_presents' => $cant_presentes, 'cant_buyed_classes' => $cant_buyed_classes, 'tot_paid_amount' => $tot_paid_amount,
-                'tot_amount' => $tot_amount);
+                'tot_amount' => $tot_amount, 'cant_gift_classes' => $cant_gift_classes);
 
         }
 
