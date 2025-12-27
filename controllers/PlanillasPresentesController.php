@@ -111,7 +111,7 @@ class PlanillasPresentesController extends SecureBaseController
 
             $planilla = $this->planillas->findById($presentes[$l]['planilla_id']);
 
-            $report[] = array('id' => $presentes[$l]['id'], 'planilla' => $planilla['subcategoria'], 'fecha_presente' => $presentes[$l]['fecha_presente']);
+            $report[] = array('id' => $presentes[$l]['id'], 'planilla' => $planilla['subcategoria'], 'fecha_presente' => $presentes[$l]['fecha_presente'],  'observacion' => $presentes[$l]['observacion']);
         }
 
         $this->returnSuccess(200,$report);
