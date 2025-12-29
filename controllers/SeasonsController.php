@@ -74,7 +74,6 @@ class SeasonsController extends BaseController
 
             $tot_amount = $this->incomes_class_course->getAmountByClassCourseIncomesBySeason($filters2);
 
-
             $reportPresentsBySeason[] = array('name' => $seasons[$k]['name'], 'cant_presents' => $cant_presentes, 'cant_buyed_classes' => $cant_buyed_classes, 'tot_paid_amount' => $tot_paid_amount,
                 'tot_amount' => $tot_amount, 'cant_gift_classes' => $cant_gift_classes);
 
