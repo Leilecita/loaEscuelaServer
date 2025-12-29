@@ -21,45 +21,58 @@ class WorkerJobModel extends BaseModel
     function getUsersWithJobsByDay($paginator = [], $periodFilter = "Dia", $userId = null) {
         $db = $this->getDb();
 
+        // ----------------------
         // Obtener fechas únicas según filtro
+        // ----------------------
         if ($periodFilter === "Dia") {
-            $datesQuery = "SELECT DISTINCT DATE(created) as day
-                       FROM worker_jobs
-                       " . ($userId ? "WHERE worker_id = " . intval($userId) : "") . "
-                       ORDER BY day DESC
-                       LIMIT " . intval($paginator['limit']) . " OFFSET " . intval($paginator['offset']);
+            $datesQuery = "
+            SELECT DISTINCT date AS day
+            FROM worker_jobs
+            " . ($userId ? "WHERE worker_id = " . intval($userId) : "") . "
+            ORDER BY day DESC
+            LIMIT " . intval($paginator['limit']) . "
+            OFFSET " . intval($paginator['offset']);
         } else { // Mes
-            $datesQuery = "SELECT DISTINCT DATE_FORMAT(created, '%Y-%m') as day
-                       FROM worker_jobs
-                       " . ($userId ? "WHERE worker_id = " . intval($userId) : "") . "
-                       ORDER BY day DESC
-                       LIMIT " . intval($paginator['limit']) . " OFFSET " . intval($paginator['offset']);
+            $datesQuery = "
+            SELECT DISTINCT DATE_FORMAT(date, '%Y-%m') AS day
+            FROM worker_jobs
+            " . ($userId ? "WHERE worker_id = " . intval($userId) : "") . "
+            ORDER BY day DESC
+            LIMIT " . intval($paginator['limit']) . "
+            OFFSET " . intval($paginator['offset']);
         }
 
         $dates = $db->fetch_all($datesQuery);
         $result = [];
 
+        // ----------------------
+        // Por cada día / mes traer usuarios y trabajos
+        // ----------------------
         foreach ($dates as $d) {
             $day = $d['day'];
 
-            // Traer todos los usuarios (o solo el userId) y sus trabajos
             $query = "
-        SELECT 
-            u.id AS user_id,
-            u.name AS user_name,
-            dj.id AS job_id,
-            dj.name AS job_name,
-            dj.category AS job_category,
-            COUNT(wj.id) AS countPeriod
-        FROM users u
-        LEFT JOIN worker_jobs wj 
-            ON wj.worker_id = u.id
-            " . ($periodFilter === "Dia" ? "AND DATE(wj.created) = '" . addslashes($day) . "'" : "") . "
-            " . ($periodFilter === "Mes" ? "AND DATE_FORMAT(wj.created, '%Y-%m') = '" . addslashes($day) . "'" : "") . "
-        LEFT JOIN day_jobs dj ON dj.id = wj.job_id
-        " . ($userId ? "WHERE u.id = " . intval($userId) : "") . "
-        GROUP BY u.id, dj.id
-        ORDER BY u.name ASC, dj.name ASC
+            SELECT 
+                u.id AS user_id,
+                u.name AS user_name,
+                dj.id AS job_id,
+                dj.name AS job_name,
+                dj.category AS job_category,
+                COUNT(wj.id) AS countPeriod
+            FROM users u
+            LEFT JOIN worker_jobs wj 
+                ON wj.worker_id = u.id
+                " . ($periodFilter === "Dia"
+                    ? "AND wj.date = '" . addslashes($day) . "'"
+                    : "") . "
+                " . ($periodFilter === "Mes"
+                    ? "AND DATE_FORMAT(wj.date, '%Y-%m') = '" . addslashes($day) . "'"
+                    : "") . "
+            LEFT JOIN day_jobs dj 
+                ON dj.id = wj.job_id
+            " . ($userId ? "WHERE u.id = " . intval($userId) : "") . "
+            GROUP BY u.id, dj.id
+            ORDER BY u.name ASC, dj.name ASC
         ";
 
             $rows = $db->fetch_all($query);
@@ -67,6 +80,7 @@ class WorkerJobModel extends BaseModel
             $users = [];
             foreach ($rows as $row) {
                 $userIdRow = $row['user_id'];
+
                 if (!isset($users[$userIdRow])) {
                     $users[$userIdRow] = [
                         'id' => $userIdRow,
@@ -95,82 +109,10 @@ class WorkerJobModel extends BaseModel
         return $result;
     }
 
+
+
+
     function getUsersWithJobsByDayantultimofnciona($paginator = [], $periodFilter = "Dia") {
-        $db = $this->getDb();
-
-        // Obtener fechas únicas según filtro
-        if ($periodFilter === "Dia") {
-            //$datesQuery = "SELECT DISTINCT DATE(created) as day
-            $datesQuery = "SELECT DISTINCT date as day
-                       FROM worker_jobs
-                       ORDER BY day DESC
-                       LIMIT " . intval($paginator['limit']) . " OFFSET " . intval($paginator['offset']);
-        } else { // Mes
-            $datesQuery = "SELECT DISTINCT DATE_FORMAT(date, '%Y-%m') as day
-                       FROM worker_jobs
-                       ORDER BY day DESC
-                       LIMIT " . intval($paginator['limit']) . " OFFSET " . intval($paginator['offset']);
-        }
-
-        $dates = $db->fetch_all($datesQuery);
-        $result = [];
-
-        foreach ($dates as $d) {
-            $day = $d['day'];
-
-            // Traer todos los usuarios con sus trabajos y conteos en una sola consulta
-            $query = "
-            SELECT 
-                u.id AS user_id,
-                u.name AS user_name,
-                dj.id AS job_id,
-                dj.name AS job_name,
-                dj.category AS job_category,
-                COUNT(wj.id) AS countPeriod
-            FROM users u
-            LEFT JOIN worker_jobs wj 
-                ON wj.worker_id = u.id
-                " . ($periodFilter === "Dia" ? "AND wj.date = '" . addslashes($day) . "'" : "") . "
-                " . ($periodFilter === "Mes" ? "AND DATE_FORMAT(wj.date, '%Y-%m') = '" . addslashes($day) . "'" : "") . "
-            LEFT JOIN day_jobs dj ON dj.id = wj.job_id
-            GROUP BY u.id, dj.id
-            ORDER BY u.name ASC, dj.name ASC
-        ";
-
-            $rows = $db->fetch_all($query);
-
-            $users = [];
-            foreach ($rows as $row) {
-                $userId = $row['user_id'];
-                if (!isset($users[$userId])) {
-                    $users[$userId] = [
-                        'id' => $userId,
-                        'name' => $row['user_name'],
-                        'jobs' => []
-                    ];
-                }
-
-                // Solo agregamos trabajos que tengan count > 0
-                if ($row['job_id'] && intval($row['countPeriod']) > 0) {
-                    $users[$userId]['jobs'][] = [
-                        'id' => $row['job_id'],
-                        'name' => $row['job_name'],
-                        'category' => $row['job_category'],
-                        'countPeriod' => intval($row['countPeriod'])
-                    ];
-                }
-            }
-
-            $result[] = [
-                'day' => $day,
-                'users' => array_values($users)
-            ];
-        }
-
-        return $result;
-    }
-
-    function getUsersWithJobsByDayantultimofncionaANTFUNCIONA($paginator = [], $periodFilter = "Dia") {
         $db = $this->getDb();
 
         // Obtener fechas únicas según filtro
