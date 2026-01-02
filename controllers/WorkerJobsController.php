@@ -123,9 +123,9 @@ class WorkerJobsController extends BaseController
 
         $filters = array();
         $filters[] = "wj.worker_id = " . intval($worker_id);
-        $filters[] = "DATE(wj.created) = '" . addslashes($date) . "'";
+        $filters[] = "DATE(wj.date) = '" . addslashes($date) . "'";
 
-        $rows = $this->getModel()->getWorkersToday($filters);
+        $rows = $this->model->getWorkersToday($filters);
 
         if (!$rows) {
             $rows = array();
