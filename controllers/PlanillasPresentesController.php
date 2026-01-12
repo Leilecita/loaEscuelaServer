@@ -55,7 +55,27 @@ class PlanillasPresentesController extends SecureBaseController
         if($exist){
             $this->returnSuccess(200,$exist);
         }else{
-            parent::post();
+
+            try {
+                parent::post();
+
+            } catch (Exception $e) {
+
+                // 3️⃣ Si igual entra un duplicado (race condition)
+                if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                    $this->returnSuccess(200, [
+                        'result' => 'already_exists'
+                    ]);
+                    return;
+                }
+
+                http_response_code(500);
+                echo json_encode([
+                    'result' => 'error',
+                    'message' => 'db_error'
+                ]);
+            }
+           // parent::post();
         }
     }
 
