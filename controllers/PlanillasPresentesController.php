@@ -30,8 +30,27 @@ class PlanillasPresentesController extends SecureBaseController
 
     function post(){
 
-        $data = (array)json_decode(file_get_contents("php://input"));
+       /* $data = (array)json_decode(file_get_contents("php://input"));
         $exist = $this->model->find(array('planilla_id = ' . $data['planilla_id'] , 'alumno_id = ' . $data['alumno_id'] , 'fecha_presente = "' . $data['fecha_presente'] . '"'));
+
+        if($exist){
+            $this->returnSuccess(200,$exist);
+        }else{
+            parent::post();
+        } */
+
+        $data = (array) json_decode(file_get_contents("php://input"));
+
+        $planillaId = (int) $data['planilla_id'];
+        $alumnoId   = (int) $data['alumno_id'];
+        $fecha      = $data['fecha_presente']; // '2026-01-12'
+
+        // 🔒 Chequeo correcto (por DATE)
+        $exist = $this->model->existePresenteHoy(
+            $planillaId,
+            $alumnoId,
+            $fecha
+        );
 
         if($exist){
             $this->returnSuccess(200,$exist);

@@ -89,7 +89,7 @@ class PlanillaPresenteModel extends BaseModel
         return $this->getDb()->fetch_all($query);
     }
 
-    function countPresentes($filters=array()){
+    function countPresentes_ant($filters=array()){
         $conditions = join(' AND ',$filters);
         $query = 'SELECT COUNT(pp.id) as total FROM planillas_presentes pp JOIN planillas p ON pp.planilla_id = p.id '.( empty($filters) ?  '' : ' WHERE '.$conditions );
         $response=$this->getDb()->fetch_row($query);
@@ -101,6 +101,36 @@ class PlanillaPresenteModel extends BaseModel
         }
 
     }
+
+    function countPresentes($filters = array()) {
+        $conditions = join(' AND ', $filters);
+
+        $query = "
+        SELECT COUNT(DISTINCT pp.alumno_id) as total
+        FROM planillas_presentes pp
+        " . (empty($filters) ? '' : ' WHERE ' . $conditions);
+
+        $response = $this->getDb()->fetch_row($query);
+        return (int) ($response['total'] ?? 0);
+    }
+
+    function existePresenteHoy($planillaId, $alumnoId, $fecha) {
+        $query = "
+        SELECT id
+        FROM planillas_presentes
+        WHERE planilla_id = ?
+          AND alumno_id = ?
+          AND DATE(fecha_presente) = ?
+        LIMIT 1
+    ";
+
+        return $this->getDb()->fetch_row($query, [
+            $planillaId,
+            $alumnoId,
+            $fecha
+        ]);
+    }
+
 
     function countPresentesByStudent($filters=array()){
         $conditions = join(' AND ',$filters);
