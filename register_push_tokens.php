@@ -18,11 +18,13 @@ if (!isset($data['token']) || $data['token'] === '') {
 }
 
 $token    = $data['token'];
-$user_id  = $data['user_id'] ?? null;
-$platform = $data['platform'] ?? null;
+$user_id  = isset($data['user_id']) ? $data['user_id'] : null;
+$platform = isset($data['platform']) ? $data['platform'] : null;
+
 
 // ---------- DB ----------
-include __DIR__ . '/../config/config.php';
+require_once 'config/config.php';
+
 global $DBCONFIG_WEB_ALUMNOS;
 
 $db = mysqli_connect(
