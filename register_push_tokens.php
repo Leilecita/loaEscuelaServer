@@ -4,6 +4,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+include __DIR__ . '/../config/config.php';
+require __DIR__ . '/../libs/dbhelper.php';
+
+global $DBCONFIG;
+
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', '/var/log/apache2/error.log');
@@ -22,16 +27,11 @@ $user_id  = isset($data['user_id']) ? $data['user_id'] : null;
 $platform = isset($data['platform']) ? $data['platform'] : null;
 
 
-// ---------- DB ----------
-require_once 'config/config.php';
-
-global $DBCONFIG_WEB_ALUMNOS;
-
 $db = mysqli_connect(
-    $DBCONFIG_WEB_ALUMNOS['HOST'],
-    $DBCONFIG_WEB_ALUMNOS['USERNAME'],
-    $DBCONFIG_WEB_ALUMNOS['PASSWORD'],
-    $DBCONFIG_WEB_ALUMNOS['DATABASE']
+    $DBCONFIG['HOST'],
+    $DBCONFIG['USERNAME'],
+    $DBCONFIG['PASSWORD'],
+    $DBCONFIG['DATABASE']
 );
 
 if (!$db) {
