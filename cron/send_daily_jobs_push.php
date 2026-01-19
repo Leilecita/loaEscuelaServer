@@ -15,55 +15,39 @@ $db = mysqli_connect(
     $DBCONFIG['DATABASE']
 );
 
+
 if (!$db) {
     error_log('ERROR DB PUSH CRON: ' . mysqli_connect_error());
     exit;
 }
 
-// ---------- TRAER TOKENS ----------
-$res = $db->query("SELECT token FROM push_tokens");
-
-if (!$res || $res->num_rows === 0) {
-    exit;
-}
-
-$messages = [];
-
-while ($row = $res->fetch_assoc()) {
-    $messages[] = [
-        'to' => $row['token'],
+// ---------- TOKEN DE PRUEBA (PEGÁ ACÁ UNO REAL) ----------
+$messages = [
+    [
+        'to' => 'ExponentPushToken[PEGÁ_ACÁ_TU_TOKEN_REAL]',
         'sound' => 'default',
-        'title' => 'LOA',
-        'body' => 'Recordatorio: cargá los trabajos del día 📝',
+        'title' => 'LOA TEST',
+        'body' => 'Push de prueba 🚀',
         'data' => [
             'screen' => 'DailyJobsScreen'
         ]
-    ];
-}
+    ]
+];
 
 // ---------- ENVÍO A EXPO ----------
-$chunks = array_chunk($messages, 100);
+$ch = curl_init('https://exp.host/--/api/v2/push/send');
 
-foreach ($chunks as $chunk) {
+curl_setopt_array($ch, [
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => [
+        'Content-Type: application/json',
+        'Accept: application/json'
+    ],
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POSTFIELDS => json_encode($messages),
+]);
 
-    $ch = curl_init('https://exp.host/--/api/v2/push/send');
+$response = curl_exec($ch);
+curl_close($ch);
 
-    curl_setopt_array($ch, [
-        CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => [
-            'Content-Type: application/json',
-            'Accept: application/json'
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POSTFIELDS => json_encode($chunk),
-    ]);
-
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    file_put_contents(
-        __DIR__ . '/push.log',
-        date('Y-m-d H:i:s') . ' ' . $response . PHP_EOL,
-        FILE_APPEND
-    );
-}
+echo $response . PHP_EOL;
