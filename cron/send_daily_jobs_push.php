@@ -6,13 +6,13 @@ error_reporting(E_ALL);
 
 // ---------- DB ----------
 include __DIR__ . '/../config/config.php';
-global $DBCONFIG_WEB_ALUMNOS;
+global $DBCONFIG;
 
 $db = mysqli_connect(
-    $DBCONFIG_WEB_ALUMNOS['HOST'],
-    $DBCONFIG_WEB_ALUMNOS['USERNAME'],
-    $DBCONFIG_WEB_ALUMNOS['PASSWORD'],
-    $DBCONFIG_WEB_ALUMNOS['DATABASE']
+    $DBCONFIG['HOST'],
+    $DBCONFIG['USERNAME'],
+    $DBCONFIG['PASSWORD'],
+    $DBCONFIG['DATABASE']
 );
 
 if (!$db) {
