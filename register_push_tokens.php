@@ -3,7 +3,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(204);
     exit;
 }
-
 include __DIR__ . '/../config/config.php';
 require __DIR__ . '/../libs/dbhelper.php';
 
