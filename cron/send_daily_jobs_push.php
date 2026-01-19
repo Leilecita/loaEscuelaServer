@@ -24,7 +24,7 @@ if (!$db) {
 // ---------- TOKEN DE PRUEBA (PEGÁ ACÁ UNO REAL) ----------
 $messages = [
     [
-        'to' => 'ExponentPushToken[PEGÁ_ACÁ_TU_TOKEN_REAL]',
+        'to' => 'ExponentPushToken[bcd87a557f121cc2e7eb6feea7b9e132]',
         'sound' => 'default',
         'title' => 'LOA TEST',
         'body' => 'Push de prueba 🚀',
