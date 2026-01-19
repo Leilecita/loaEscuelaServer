@@ -53,7 +53,12 @@ class PlanillasPresentesController extends SecureBaseController
         );
 
         if($exist){
-            $this->returnSuccess(200,$exist);
+                $this->returnSuccess(200, [
+                    'result' => 'already_exists',
+                    'id' => $exist['id']
+                ]);
+                return;
+           // $this->returnSuccess(200,$exist);
         }else{
 
             try {
@@ -75,7 +80,6 @@ class PlanillasPresentesController extends SecureBaseController
                     'message' => 'db_error'
                 ]);
             }
-           // parent::post();
         }
     }
 
