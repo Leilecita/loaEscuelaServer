@@ -58,7 +58,7 @@ class PlanillaPresenteModel extends BaseModel
         return $this->getDb()->fetch_all($query);
     }
 
-   /* function getPresentsGroupByMonth($filters = array(), $paginator = array()) {
+    function getPresentsGroupByMonth($filters = array(), $paginator = array()) {
         $conditions = join(' AND ', $filters);
 
         $query = "
@@ -79,16 +79,15 @@ class PlanillaPresenteModel extends BaseModel
     ";
 
         return $this->getDb()->fetch_all($query);
-    } */
-
-    function getPresentsGroupByMonth($filters = array(), $paginator = array()) {
+    }
+    function getMonthsWithPresents($filters = [], $paginator = []) {
         $conditions = join(' AND ', $filters);
 
         $query = "
         SELECT 
             DATE_FORMAT(fecha_presente, '%Y-%m-01') AS fecha_presente
         FROM planillas_presentes
-        " . (empty($filters) ? '' : 'WHERE ' . $conditions) . "
+        " . (empty($conditions) ? '' : 'WHERE ' . $conditions) . "
         GROUP BY DATE_FORMAT(fecha_presente, '%Y-%m')
         ORDER BY fecha_presente DESC
         LIMIT " . (int)$paginator['limit'] . " OFFSET " . (int)$paginator['offset'] . "
@@ -96,6 +95,7 @@ class PlanillaPresenteModel extends BaseModel
 
         return $this->getDb()->fetch_all($query);
     }
+
 
 
 

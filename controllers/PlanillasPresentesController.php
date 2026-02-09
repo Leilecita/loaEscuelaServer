@@ -163,7 +163,11 @@ class PlanillasPresentesController extends SecureBaseController
 
     function getDayResumPresents(){
         if(isset($_GET['period']) && ($_GET['period'] == 'Mes')){
-            $presents = $this->model->getPresentsGroupByMonth($this->getFilters(), $this->getPaginator());
+            //$presents = $this->model->getPresentsGroupByMonth($this->getFilters(), $this->getPaginator());
+            $presents = $this->model->getMonthsWithPresents(
+                $this->getFilters(),
+                $this->getPaginator()
+            );
         }else{
             $presents = $this->model->getPresentsGroupByDate($this->getFilters(), $this->getPaginator());
         }
