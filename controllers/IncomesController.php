@@ -186,19 +186,26 @@ class IncomesController extends BaseController
             @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap');
 
             @page {
-                margin: 18px;
+                margin: 0;
             }
 
             * {
                 box-sizing: border-box;
             }
 
+            html,
             body {
+                width: 100%;
+                min-height: 100%;
                 margin: 0;
-                padding: 20px;
+                background-color: #edfafd;
+            }
+
+            body {
+                min-height: 100vh;
+                padding: 38px;
                 font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
                 color: #064b63;
-                background-color: #edfafd;
             }
 
             .receipt {
@@ -213,8 +220,8 @@ class IncomesController extends BaseController
 
             .header {
                 width: 100%;
-                border-collapse: collapse;
                 margin-bottom: 20px;
+                border-collapse: collapse;
             }
 
             .header td {
@@ -223,18 +230,18 @@ class IncomesController extends BaseController
 
             .business-name {
                 color: #064b63;
-                font-size: 26px;
+                font-size: 28px;
                 font-weight: 800;
                 letter-spacing: -0.5px;
             }
 
-           .season {
-    margin-top: 7px;
-    color: #064b63;
-    font-size: 15px;
-    font-weight: 400;
-    letter-spacing: 0.3px;
-}
+            .season {
+                margin-top: 7px;
+                color: #064b63;
+                font-size: 17px;
+                font-weight: 400;
+                letter-spacing: 0.3px;
+            }
 
             .logo-container {
                 width: 100px;
@@ -274,7 +281,7 @@ class IncomesController extends BaseController
 
             .label {
                 color: #087b7b;
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -282,7 +289,7 @@ class IncomesController extends BaseController
 
             .value {
                 color: #064b63;
-                font-size: 16px;
+                font-size: 18px;
                 font-weight: 600;
                 line-height: 1.4;
             }
@@ -291,7 +298,7 @@ class IncomesController extends BaseController
                 margin-top: 22px;
                 text-align: center;
                 color: #65838e;
-                font-size: 10px;
+                font-size: 12px;
                 font-weight: 400;
             }
         </style>
@@ -312,10 +319,10 @@ class IncomesController extends BaseController
                     </td>
 
                     <td class='logo-container'>
-                            <img
-                                src='https://school.loasurf.com.ar/img/logo-home.png'
-                                class='logo'
-                            />
+                        <img
+                            src='https://school.loasurf.com.ar/img/logo-home.png'
+                            class='logo'
+                        />
                     </td>
                 </tr>
             </table>
