@@ -408,12 +408,6 @@ class IncomesController extends BaseController
             $_GET['detail']
         );
 
-        // Vista previa en el navegador
-        if (isset($_GET['preview'])) {
-            header('Content-Type: text/html; charset=utf-8');
-            echo $html;
-            return;
-        }
 
         $descriptorspec = array(
             0 => array('pipe', 'r'),
