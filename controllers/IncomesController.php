@@ -201,18 +201,20 @@ class IncomesController extends BaseController
                 background-color: #edfafd;
             }
 
-            body {
+          body {
                 min-height: 100vh;
-                padding: 38px;
+                margin: 0;
+                padding: 12px;
                 font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
                 color: #064b63;
+                background-color: #edfafd;
             }
-
+            
             .receipt {
                 width: 100%;
-                max-width: 700px;
-                margin: 0 auto;
-                padding: 28px 32px 24px;
+                max-width: none;
+                margin: 0;
+                padding: 32px 38px 28px;
                 background-color: #ffffff;
                 border: 1px solid #abdce7;
                 border-radius: 22px;
@@ -266,11 +268,11 @@ class IncomesController extends BaseController
             }
 
             .details .label-column {
-                width: 30%;
+                width: 35%;
             }
 
             .details .value-column {
-                width: 70%;
+                width: 65%;
             }
 
             .details td {
