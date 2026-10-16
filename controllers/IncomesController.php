@@ -312,10 +312,10 @@ class IncomesController extends BaseController
                     </td>
 
                     <td class='logo-container'>
-                        <img
-                            src='https://www.loasurf.com.ar/img/logo-home.png'
-                            class='logo'
-                        />
+                            <img
+                                src='https://school.loasurf.com.ar/img/logo-home.png'
+                                class='logo'
+                            />
                     </td>
                 </tr>
             </table>
