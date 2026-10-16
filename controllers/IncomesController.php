@@ -46,7 +46,7 @@ class IncomesController extends BaseController
         $this->returnSuccess(200,$report);
     }
 
-    private function renderTemplateIncome($created, $nombre, $amount, $detail) {
+    private function renderTemplateIncome_ant($created, $nombre, $amount, $detail) {
         $dateObj = new DateTime($created);
         $date = $dateObj->format('d/m/Y');
 
@@ -148,9 +148,218 @@ class IncomesController extends BaseController
 
         return $html;
     }
+    private function renderTemplateIncome($created, $nombre, $amount, $detail)
+    {
+        $dateObj = new DateTime($created);
+        $date = $dateObj->format('d/m/Y');
+        $year = $dateObj->format('Y');
 
+        $safeNombre = htmlspecialchars(
+            (string) $nombre,
+            ENT_QUOTES,
+            'UTF-8'
+        );
 
-    function generatePdfTest() {
+        $safeDetail = nl2br(
+            htmlspecialchars(
+                (string) $detail,
+                ENT_QUOTES,
+                'UTF-8'
+            )
+        );
+
+        $formattedAmount = number_format(
+            (float) $amount,
+            2,
+            ',',
+            '.'
+        );
+
+        $html = "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Comprobante de pago</title>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap');
+
+            @page {
+                margin: 18px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                padding: 20px;
+                font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
+                color: #064b63;
+                background-color: #edfafd;
+            }
+
+            .receipt {
+                width: 100%;
+                max-width: 700px;
+                margin: 0 auto;
+                padding: 28px 32px 24px;
+                background-color: #ffffff;
+                border: 1px solid #abdce7;
+                border-radius: 22px;
+            }
+
+            .header {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            .header td {
+                vertical-align: middle;
+            }
+
+            .business-name {
+                color: #064b63;
+                font-size: 26px;
+                font-weight: 800;
+                letter-spacing: -0.5px;
+            }
+
+           .season {
+    margin-top: 7px;
+    color: #064b63;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+            .logo-container {
+                width: 100px;
+                text-align: right;
+            }
+
+            .logo {
+                width: 74px;
+                height: auto;
+            }
+
+            .separator {
+                height: 1px;
+                margin-bottom: 10px;
+                background-color: #c5e7ee;
+            }
+
+            .details {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+
+            .details .label-column {
+                width: 30%;
+            }
+
+            .details .value-column {
+                width: 70%;
+            }
+
+            .details td {
+                padding: 14px 10px;
+                vertical-align: top;
+                border-bottom: 1px solid #cce8ee;
+            }
+
+            .label {
+                color: #087b7b;
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .value {
+                color: #064b63;
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 1.4;
+            }
+
+            .footer {
+                margin-top: 22px;
+                text-align: center;
+                color: #65838e;
+                font-size: 10px;
+                font-weight: 400;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class='receipt'>
+            <table class='header'>
+                <tr>
+                    <td>
+                        <div class='business-name'>
+                            Escuela de Surf Loa
+                        </div>
+
+                        <div class='season'>
+                            Colonia &middot; Temporada {$year}
+                        </div>
+                    </td>
+
+                    <td class='logo-container'>
+                        <img
+                            src='https://www.loasurf.com.ar/img/logo-home.png'
+                            class='logo'
+                        />
+                    </td>
+                </tr>
+            </table>
+
+            <div class='separator'></div>
+
+            <table class='details'>
+                <colgroup>
+                    <col class='label-column'>
+                    <col class='value-column'>
+                </colgroup>
+
+                <tr>
+                    <td class='label'>Recibimos de</td>
+                    <td class='value'>{$safeNombre}</td>
+                </tr>
+
+                <tr>
+                    <td class='label'>Importe recibido</td>
+                    <td class='value'>&#36; {$formattedAmount}</td>
+                </tr>
+
+                <tr>
+                    <td class='label'>Concepto</td>
+                    <td class='value'>{$safeDetail}</td>
+                </tr>
+
+                <tr>
+                    <td class='label'>Fecha</td>
+                    <td class='value'>{$date}</td>
+                </tr>
+            </table>
+
+            <div class='footer'>
+                Comprobante de pago generado electrónicamente por Escuela de Surf Loa.
+            </div>
+        </div>
+    </body>
+    </html>
+    ";
+
+        return $html;
+    }
+    function generatePdfTest_ant() {
         global $WKCONFIG;
 
         // Evita el error qt_mac_loadMenuNib
@@ -185,5 +394,68 @@ class IncomesController extends BaseController
         }
     }
 
+    function generatePdfTest()
+    {
+        global $WKCONFIG;
+
+        // Evita el error qt_mac_loadMenuNib
+        putenv('TMPDIR=/tmp');
+
+        $html = $this->renderTemplateIncome(
+            $_GET['created'],
+            $_GET['nombre'],
+            $_GET['amount'],
+            $_GET['detail']
+        );
+
+        // Vista previa en el navegador
+        if (isset($_GET['preview'])) {
+            header('Content-Type: text/html; charset=utf-8');
+            echo $html;
+            return;
+        }
+
+        $descriptorspec = array(
+            0 => array('pipe', 'r'),
+            1 => array('pipe', 'w'),
+            2 => array('pipe', 'w'),
+        );
+
+        $process = proc_open(
+            $WKCONFIG['PATH'] . ' -q - -',
+            $descriptorspec,
+            $pipes
+        );
+
+        if (!is_resource($process)) {
+            die(json_encode([
+                'result' => 'error',
+                'message' => 'No se pudo iniciar wkhtmltopdf. Revisa permisos y path.'
+            ]));
+        }
+
+        fwrite($pipes[0], $html);
+        fclose($pipes[0]);
+
+        $pdf = stream_get_contents($pipes[1]);
+        $errors = stream_get_contents($pipes[2]);
+
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        proc_close($process);
+
+        if ($pdf) {
+            echo json_encode([
+                'result' => 'success',
+                'pdf' => base64_encode($pdf)
+            ]);
+        } else {
+            echo json_encode([
+                'result' => 'error',
+                'message' => "PDF generation failed: $errors"
+            ]);
+        }
+    }
 }
 
