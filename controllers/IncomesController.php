@@ -230,7 +230,7 @@ class IncomesController extends BaseController
 
             .business-name {
                 color: #064b63;
-                font-size: 28px;
+                font-size: 32px;
                 font-weight: 800;
                 letter-spacing: -0.5px;
             }
@@ -238,7 +238,7 @@ class IncomesController extends BaseController
             .season {
                 margin-top: 7px;
                 color: #064b63;
-                font-size: 17px;
+                font-size: 21px;
                 font-weight: 400;
                 letter-spacing: 0.3px;
             }
@@ -281,7 +281,7 @@ class IncomesController extends BaseController
 
             .label {
                 color: #087b7b;
-                font-size: 14px;
+                font-size: 18px;
                 font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -289,7 +289,7 @@ class IncomesController extends BaseController
 
             .value {
                 color: #064b63;
-                font-size: 18px;
+                font-size: 22px;
                 font-weight: 600;
                 line-height: 1.4;
             }
