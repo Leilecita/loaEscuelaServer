@@ -210,7 +210,7 @@ class IncomesController extends BaseController
                 background-color: #edfafd;
             }
             .receipt {
-                width: 94%;
+                width: 90%;
                 max-width: none;
                 margin: 0 auto;
                 padding: 32px 38px 28px;
