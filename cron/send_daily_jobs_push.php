@@ -2,9 +2,14 @@
 <?php
 
 // LOA - Recordatorios diarios de trabajos
-// Uso:
+//
+// PRUEBAS:
 // php send_daily_jobs_push.php --slot=18
+// php send_daily_jobs_push.php --slot=20
+//
+// ENVIOS REALES:
 // php send_daily_jobs_push.php --slot=18 --send
+// php send_daily_jobs_push.php --slot=20 --send
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(403);
@@ -22,8 +27,9 @@ require __DIR__ . '/../config/config.php';
 global $DBCONFIG;
 
 // ---------------------------------------
-// PARÁMETROS
+// PARAMETROS
 // ---------------------------------------
+
 $slot = null;
 $send = false;
 
@@ -38,7 +44,7 @@ foreach ($argv as $arg) {
 }
 
 if ($slot === null) {
-    exit("Indicá --slot=18 o --slot=20\n");
+    exit("Indica --slot=18 o --slot=20\n");
 }
 
 $logFile = __DIR__ . '/push.log';
@@ -48,6 +54,7 @@ function pushLog($text)
     global $logFile;
 
     $line = date('Y-m-d H:i:s') . ' ART ' . $text;
+
     echo $line . PHP_EOL;
 
     file_put_contents(
@@ -58,8 +65,9 @@ function pushLog($text)
 }
 
 // ---------------------------------------
-// CONEXIÓN A MYSQL
+// CONEXION MYSQL
 // ---------------------------------------
+
 $db = mysqli_connect(
     $DBCONFIG['HOST'],
     $DBCONFIG['USERNAME'],
@@ -68,21 +76,23 @@ $db = mysqli_connect(
 );
 
 if (!$db) {
-    pushLog('ERROR: conexión MySQL');
+    pushLog('ERROR: conexion MySQL');
     exit(1);
 }
 
 mysqli_set_charset($db, 'utf8mb4');
 
-// Fecha actual de Argentina
+// Fecha actual en Argentina
 $hoy = date('Y-m-d');
 
 // ---------------------------------------
-// CONSULTAR USUARIOS SIN TRABAJOS
+// USUARIOS SIN TRABAJOS CARGADOS
 // ---------------------------------------
+
 $sql = "
     SELECT DISTINCT
         pt.token,
+        u.id AS user_id,
         u.name
     FROM push_tokens pt
     INNER JOIN users u
@@ -98,47 +108,64 @@ $sql = "
           WHERE wj.worker_id = u.id
             AND wj.date = ?
       )
+    ORDER BY u.id
 ";
 
 $stmt = $db->prepare($sql);
 
 if (!$stmt) {
-    pushLog('ERROR: consulta SQL');
+    pushLog('ERROR SQL: ' . $db->error);
     exit(1);
 }
 
 $stmt->bind_param('s', $hoy);
 
 if (!$stmt->execute()) {
-    pushLog('ERROR: ejecutando consulta');
+    pushLog('ERROR CONSULTA: ' . $stmt->error);
     exit(1);
 }
 
 $result = $stmt->get_result();
 
 $messages = [];
+$destinatarios = [];
 $tokensEnviados = [];
 
 while ($row = $result->fetch_assoc()) {
 
     $token = $row['token'];
+    $userId = (int) $row['user_id'];
 
-    // Evitar repetir el mismo token
+    // No repetir un mismo token
     if (isset($tokensEnviados[$token])) {
         continue;
     }
 
     $tokensEnviados[$token] = true;
 
-    $nombre = trim($row['name']);
-    $nombre = $nombre !== '' ? ucfirst($nombre) : 'equipo';
+    $nombre = trim($row['name'] ?? '');
+
+    if ($nombre === '') {
+        $nombre = 'equipo';
+    } else {
+        $nombre = ucfirst($nombre);
+    }
+
+    // -----------------------------------
+    // MENSAJES PERSONALIZADOS
+    // -----------------------------------
 
     if ($slot === 18) {
-        $titulo = 'LOA · Trabajos del día';
+
+        $titulo = 'LOA · Trabajos del dia';
+
         $mensaje = "¡Hola {$nombre}! 💙 No te olvides de cargar los trabajos de hoy 📝";
+
     } else {
+
         $titulo = 'LOA · Recordatorio';
-        $mensaje = "¡Hola {$nombre}! 🌊 Todavía no registraste tus trabajos de hoy. Cuando puedas, acordate de cargarlos.";
+
+        $mensaje = "¡Hola {$nombre}! 🌊 Todavía no registraste tus trabajos de hoy. Acordate de cargarlos.";
     }
 
     $messages[] = [
@@ -150,38 +177,58 @@ while ($row = $result->fetch_assoc()) {
             'screen' => 'DailyJobsScreen'
         ]
     ];
+
+    $destinatarios[] = [
+        'id' => $userId,
+        'nombre' => $nombre,
+        'mensaje' => $mensaje
+    ];
 }
 
 $stmt->close();
 
 $total = count($messages);
 
-pushLog("Horario {$slot}:00 - Fecha {$hoy} - Destinatarios: {$total}");
-
 // ---------------------------------------
 // MODO PRUEBA
 // ---------------------------------------
-if (!$send) {
-    echo "MODO PRUEBA - No se envió nada.\n";
 
-    foreach ($messages as $message) {
-        echo $message['body'] . PHP_EOL;
+if (!$send) {
+
+    echo "MODO PRUEBA - No se envio nada.\n";
+    echo "Fecha Argentina: {$hoy}\n";
+    echo "Horario: {$slot}:00\n";
+    echo "Dispositivos: {$total}\n\n";
+
+    foreach ($destinatarios as $item) {
+
+        echo "Usuario {$item['id']} - {$item['nombre']}\n";
+        echo $item['mensaje'] . "\n\n";
     }
 
     mysqli_close($db);
-    exit;
+    exit(0);
 }
 
 // ---------------------------------------
-// ENVÍO A EXPO
+// ENVIO REAL A EXPO
 // ---------------------------------------
+
+pushLog(
+    "Horario {$slot}:00 - Fecha {$hoy} - Dispositivos: {$total}"
+);
+
 if ($total === 0) {
+
     pushLog('No hay notificaciones pendientes');
+
     mysqli_close($db);
-    exit;
+    exit(0);
 }
 
 $chunks = array_chunk($messages, 100);
+
+$hayErrores = false;
 
 foreach ($chunks as $chunk) {
 
@@ -205,29 +252,39 @@ foreach ($chunks as $chunk) {
     ]);
 
     $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    $httpCode = curl_getinfo(
+        $ch,
+        CURLINFO_HTTP_CODE
+    );
+
     $curlError = curl_error($ch);
 
     curl_close($ch);
 
     if ($response === false || $httpCode !== 200) {
+
         pushLog(
             "ERROR EXPO HTTP {$httpCode}: {$curlError} " .
-            substr((string)$response, 0, 500)
+            substr((string) $response, 0, 500)
         );
+
+        $hayErrores = true;
         continue;
     }
 
     $json = json_decode($response, true);
 
     if (!is_array($json) || !isset($json['data'])) {
+
         pushLog('ERROR: respuesta Expo inesperada');
+
+        $hayErrores = true;
         continue;
     }
 
     $tickets = $json['data'];
 
-    // Normalizar respuesta individual
     if (isset($tickets['status'])) {
         $tickets = [$tickets];
     }
@@ -238,21 +295,30 @@ foreach ($chunks as $chunk) {
     foreach ($tickets as $ticket) {
 
         if (($ticket['status'] ?? '') === 'ok') {
+
             $aceptados++;
+
         } else {
+
             $rechazados++;
+            $hayErrores = true;
 
             pushLog(
                 'ERROR TICKET: ' .
-                json_encode($ticket, JSON_UNESCAPED_UNICODE)
+                json_encode(
+                    $ticket,
+                    JSON_UNESCAPED_UNICODE
+                )
             );
         }
     }
 
     pushLog(
-        "Expo aceptó {$aceptados} mensajes. " .
+        "Expo acepto {$aceptados} mensajes. " .
         "Rechazados: {$rechazados}"
     );
 }
 
 mysqli_close($db);
+
+exit($hayErrores ? 1 : 0);
