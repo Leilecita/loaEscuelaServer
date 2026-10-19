@@ -124,7 +124,6 @@ class StudentsController extends SecureBaseController
 
         //hacer lo de las season
 
-
         $planilla = $this->planillas->getPlanillaByCategoriaAndSubCat($localFilter);
 
         $reportStudent = array();
@@ -336,6 +335,11 @@ class StudentsController extends SecureBaseController
 
         }
 
+        if ( isset($_GET['turno']) &&
+            in_array($_GET['turno'], ['manana', 'tarde'], true)) {
+            $localFilter[] = 'turno = "' . $_GET['turno'] . '"';
+        }
+
 
         return $localFilter;
     }
@@ -347,9 +351,11 @@ class StudentsController extends SecureBaseController
         $localFilter = $this->getLocalFilter();
 
         $total_alumnos = 0;
+        $total_active_students = 0;
         $total_presents = 0;
 
         if($_GET['categoria'] != "Todo" && $_GET['subcategoria'] != "Todo"){ //SI HAY UNA PLANILLA SELECCIONADA
+
 
             $planilla = $this->planillas->getPlanillaByCategoriaAndSubCat($localFilter);
             $total_alumnos = 0;

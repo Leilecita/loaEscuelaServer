@@ -227,7 +227,19 @@ class PlanillasPresentesController extends SecureBaseController
 
                 $tot_presents = $tot_presents + $planilla_presentes;
 
-                $reportPlanilla[] = array('nombre_planilla' => $list_planillas_by_year[$j]['subcategoria'], 'cant_presentes' => $planilla_presentes);
+               // $reportPlanilla[] = array('nombre_planilla' => $list_planillas_by_year[$j]['subcategoria'], 'cant_presentes' => $planilla_presentes);
+
+                $planillaActual = $list_planillas_by_year[$j];
+                $subcategoria = $planillaActual['subcategoria'];
+
+                $usaTurno = in_array($subcategoria,['mini', 'kids', 'highschool'],true);
+
+                $reportPlanilla[] = [
+                    'planilla_id' => (int) $planillaActual['id'],
+                    'nombre_planilla' => $subcategoria,
+                    'turno' => $usaTurno ? ($planillaActual['turno'] ?? null) : null,
+                    'cant_presentes' => $planilla_presentes,
+                ];
             }
 
             $reportItems[] = array(
