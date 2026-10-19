@@ -28,10 +28,15 @@ if (!$db) {
 $sql = "
     SELECT token
     FROM push_tokens
-    WHERE token IS NOT NULL
-      AND token LIKE 'ExponentPushToken[%]'
+    WHERE user_id = 3
+      AND token IS NOT NULL
+      AND (
+          token LIKE 'ExponentPushToken[%'
+          OR token LIKE 'ExpoPushToken[%'
+      )
+    ORDER BY last_seen_at DESC
+    LIMIT 1
 ";
-
 $res = $db->query($sql);
 
 if (!$res || $res->num_rows === 0) {
